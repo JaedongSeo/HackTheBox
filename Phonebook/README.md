@@ -3,7 +3,8 @@
 
 **Target IP**: 83.136.253.59:35443  
 **Difficulty**: Easy/Medium  
-**Objective**: Exploit LDAP Injection vulnerability to obtain credentials and capture the flag.
+**Objective**: Exploit LDAP Injection vulnerability to obtain credentials and capture the flag.  
+![webpage](img/webpage.png)
 
 ---
 
@@ -57,16 +58,19 @@ pw: 1234
 
 writeup 참고 결과 LDAP 사용 중이라는 정보 확인.
 
-참고 자료: [Cobalt.io - Introduction to LDAP Injection](https://www.cobalt.io/blog/introduction-to-ldap-injection-attack)
+참고 자료: [Cobalt.io - Introduction to LDAP Injection](https://www.cobalt.io/blog/introduction-to-ldap-injection-attack)  
+![ldap](img/ldap.png)
 
 ### ✅ 로그인 성공한 페이로드
 
 ```text
-id: *)(uid=*
+id: *
 pw: *
 ```
+![logined](img/logined.png)
 
-→ 모든 사용자 대상으로 검색. 로그인 성공.
+→ 모든 사용자 대상으로 검색. 로그인 성공.  
+![search](img/search.png)
 
 ---
 
@@ -95,8 +99,10 @@ Python 스크립트를 통해 `reese`의 패스워드를 Brute-force:
 ```bash
 python3 exploit.py
 ```
+![script](img/script.png)
 
-→ 결과:
+→ 결과:  
+![flag](img/flag.png)
 
 ```
 password: HTB{d1rectory_h4xx0r_is_k00l}
@@ -120,4 +126,3 @@ password: HTB{d1rectory_h4xx0r_is_k00l}
 
 - **플래그**: `HTB{d1rectory_h4xx0r_is_k00l}`
 - **획득 방법**: LDAP Injection을 통한 인증 우회 및 Brute-force
-
