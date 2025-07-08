@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Tue Jul  8 06:36:57 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Weather_App 94.237.55.43
+Host: 94.237.55.43 (94-237-55-43.uk-lon1.upcloud.host)	Status: Up
+Host: 94.237.55.43 (94-237-55-43.uk-lon1.upcloud.host)	Ports: 22/open/tcp//ssh//OpenSSH 9.2p1 Debian 2+deb12u3 (protocol 2.0)/, 111/open/tcp//rpcbind//2-4 (RPC #100000)/, 32783/open/tcp//http//Apache httpd 2.4.41 ((Ubuntu))/, 49153/open/tcp//tcpwrapped///, 52869/open/tcp//tcpwrapped///
+# Nmap done at Tue Jul  8 08:28:41 2025 -- 1 IP address (1 host up) scanned in 6704.22 seconds
