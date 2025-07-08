@@ -1,0 +1,26 @@
+# Nmap 7.95 scan initiated Tue Jul  8 06:36:57 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Weather_App 94.237.55.43
+Warning: 94.237.55.43 giving up on port because retransmission cap hit (10).
+Nmap scan report for 94-237-55-43.uk-lon1.upcloud.host (94.237.55.43)
+Host is up (0.00028s latency).
+Not shown: 544 filtered tcp ports (no-response), 451 closed tcp ports (reset)
+PORT      STATE SERVICE    VERSION
+22/tcp    open  ssh        OpenSSH 9.2p1 Debian 2+deb12u3 (protocol 2.0)
+| ssh-hostkey: 
+|   256 6c:a1:6a:4f:74:af:40:9c:96:88:05:1f:6c:55:71:31 (ECDSA)
+|_  256 f2:cc:de:65:3e:25:b0:34:a8:1b:81:19:69:7a:2d:87 (ED25519)
+111/tcp   open  rpcbind    2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|_  100000  3,4          111/udp6  rpcbind
+32783/tcp open  http       Apache httpd 2.4.41 ((Ubuntu))
+|_http-title: Inlane Freight
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+49153/tcp open  tcpwrapped
+52869/tcp open  tcpwrapped
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Jul  8 08:28:41 2025 -- 1 IP address (1 host up) scanned in 6704.22 seconds
