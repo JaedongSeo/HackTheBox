@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Sun Jul 13 11:04:08 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Bashed 10.129.188.137
+Host: 10.129.188.137 ()	Status: Up
+Host: 10.129.188.137 ()	Ports: 80/open/tcp//http//Apache httpd 2.4.18 ((Ubuntu))/	Ignored State: closed (999)
+# Nmap done at Sun Jul 13 11:04:23 2025 -- 1 IP address (1 host up) scanned in 15.68 seconds
