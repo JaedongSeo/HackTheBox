@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Mon Jul 14 10:57:35 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Optimum 10.129.19.252
+Host: 10.129.19.252 ()	Status: Up
+Host: 10.129.19.252 ()	Ports: 80/open/tcp//http//HttpFileServer httpd 2.3/	Ignored State: filtered (999)
+# Nmap done at Mon Jul 14 10:58:08 2025 -- 1 IP address (1 host up) scanned in 32.93 seconds
