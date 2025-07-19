@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Sat Jul 19 07:41:15 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Keeper 10.129.229.41
+Host: 10.129.229.41 (tickets.keeper.htb)	Status: Up
+Host: 10.129.229.41 (tickets.keeper.htb)	Ports: 22/open/tcp//ssh//OpenSSH 8.9p1 Ubuntu 3ubuntu0.3 (Ubuntu Linux; protocol 2.0)/, 80/open/tcp//http//nginx 1.18.0 (Ubuntu)/	Ignored State: closed (998)
+# Nmap done at Sat Jul 19 07:41:31 2025 -- 1 IP address (1 host up) scanned in 16.08 seconds
