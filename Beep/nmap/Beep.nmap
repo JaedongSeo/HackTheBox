@@ -1,0 +1,43 @@
+# Nmap 7.95 scan initiated Mon Jul 21 04:46:31 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Beep 10.129.229.183
+Nmap scan report for 10.129.229.183
+Host is up (0.26s latency).
+Not shown: 988 closed tcp ports (reset)
+PORT      STATE SERVICE    VERSION
+22/tcp    open  ssh        OpenSSH 4.3 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 ad:ee:5a:bb:69:37:fb:27:af:b8:30:72:a0:f9:6f:53 (DSA)
+|_  2048 bc:c6:73:59:13:a1:8a:4b:55:07:50:f6:65:1d:6d:0d (RSA)
+25/tcp    open  smtp?
+|_smtp-commands: Couldn't establish connection on port 25
+80/tcp    open  http       Apache httpd 2.2.3
+|_http-server-header: Apache/2.2.3 (CentOS)
+|_http-title: Did not follow redirect to https://10.129.229.183/
+110/tcp   open  pop3?
+111/tcp   open  rpcbind    2 (RPC #100000)
+143/tcp   open  imap?
+443/tcp   open  ssl/http   Apache httpd 2.2.3 ((CentOS))
+| ssl-cert: Subject: commonName=localhost.localdomain/organizationName=SomeOrganization/stateOrProvinceName=SomeState/countryName=--
+| Not valid before: 2017-04-07T08:22:08
+|_Not valid after:  2018-04-07T08:22:08
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-server-header: Apache/2.2.3 (CentOS)
+|_ssl-date: 2025-07-21T08:51:17+00:00; +29s from scanner time.
+|_http-title: Elastix - Login page
+993/tcp   open  imaps?
+995/tcp   open  pop3s?
+3306/tcp  open  mysql?
+4445/tcp  open  upnotifyp?
+10000/tcp open  ssl/http   MiniServ 1.570 (Webmin httpd)
+|_ssl-date: 2025-07-21T08:51:17+00:00; +29s from scanner time.
+| ssl-cert: Subject: commonName=*/organizationName=Webmin Webserver on localhost.localdomain
+| Not valid before: 2017-04-07T08:24:46
+|_Not valid after:  2022-04-06T08:24:46
+|_http-title: Site doesn't have a title (text/html; Charset=iso-8859-1).
+Service Info: Host: 127.0.0.1
+
+Host script results:
+|_clock-skew: mean: 28s, deviation: 0s, median: 28s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Mon Jul 21 04:56:06 2025 -- 1 IP address (1 host up) scanned in 574.25 seconds
