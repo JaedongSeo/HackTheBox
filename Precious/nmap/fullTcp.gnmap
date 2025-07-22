@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Tue Jul 22 07:55:22 2025 as: /usr/lib/nmap/nmap -Pn -n --open -p- --max-retries 1 --min-rate 2000 -oA nmap/fullTcp 10.129.99.246
+Host: 10.129.99.246 ()	Status: Up
+Host: 10.129.99.246 ()	Ports: 22/open/tcp//ssh///, 80/open/tcp//http///
+# Nmap done at Tue Jul 22 07:55:58 2025 -- 1 IP address (1 host up) scanned in 36.51 seconds
