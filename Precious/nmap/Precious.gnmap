@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Tue Jul 22 07:51:56 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Precious 10.129.99.246
+Host: 10.129.99.246 ()	Status: Up
+Host: 10.129.99.246 ()	Ports: 22/open/tcp//ssh//OpenSSH 8.4p1 Debian 5+deb11u1 (protocol 2.0)/, 80/open/tcp//http//nginx 1.18.0/	Ignored State: closed (998)
+# Nmap done at Tue Jul 22 07:52:13 2025 -- 1 IP address (1 host up) scanned in 17.37 seconds
