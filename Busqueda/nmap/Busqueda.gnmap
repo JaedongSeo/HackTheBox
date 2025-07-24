@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Thu Jul 24 09:29:05 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Busqueda 10.129.178.117
+Host: 10.129.178.117 ()	Status: Up
+Host: 10.129.178.117 ()	Ports: 22/open/tcp//ssh//OpenSSH 8.9p1 Ubuntu 3ubuntu0.1 (Ubuntu Linux; protocol 2.0)/, 80/open/tcp//http//Apache httpd 2.4.52/	Ignored State: closed (998)
+# Nmap done at Thu Jul 24 09:29:23 2025 -- 1 IP address (1 host up) scanned in 18.85 seconds
