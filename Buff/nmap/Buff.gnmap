@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Sat Jul 26 08:42:38 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Buff 10.129.2.18
+Host: 10.129.2.18 ()	Status: Up
+Host: 10.129.2.18 ()	Ports: 8080/open/tcp//http//Apache httpd 2.4.43 ((Win64) OpenSSL|1.1.1g PHP|7.4.6)/	Ignored State: filtered (999)
+# Nmap done at Sat Jul 26 08:43:20 2025 -- 1 IP address (1 host up) scanned in 41.92 seconds
