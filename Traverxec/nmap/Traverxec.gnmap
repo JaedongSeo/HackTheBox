@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Sun Jul 27 08:31:09 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Traverxec 10.129.3.17
+Host: 10.129.3.17 ()	Status: Up
+Host: 10.129.3.17 ()	Ports: 22/open/tcp//ssh//OpenSSH 7.9p1 Debian 10+deb10u1 (protocol 2.0)/, 80/open/tcp//http//nostromo 1.9.6/	Ignored State: filtered (998)
+# Nmap done at Sun Jul 27 08:31:38 2025 -- 1 IP address (1 host up) scanned in 28.97 seconds
