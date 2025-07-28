@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Mon Jul 28 08:26:24 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Grandpa 10.129.95.233
+Host: 10.129.95.233 ()	Status: Up
+Host: 10.129.95.233 ()	Ports: 80/open/tcp//http//Microsoft IIS httpd 6.0/	Ignored State: filtered (999)
+# Nmap done at Mon Jul 28 08:26:55 2025 -- 1 IP address (1 host up) scanned in 30.78 seconds
