@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Tue Jul 29 07:36:59 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Paper 10.129.136.31
+Host: 10.129.136.31 ()	Status: Up
+Host: 10.129.136.31 ()	Ports: 22/open/tcp//ssh//OpenSSH 8.0 (protocol 2.0)/, 80/open/tcp//http//Apache httpd 2.4.37 ((centos) OpenSSL|1.1.1k mod_fcgid|2.3.9)/, 443/open/tcp//ssl|http//Apache httpd 2.4.37 ((centos) OpenSSL|1.1.1k mod_fcgid|2.3.9)/	Ignored State: closed (997)
+# Nmap done at Tue Jul 29 07:37:27 2025 -- 1 IP address (1 host up) scanned in 28.01 seconds
