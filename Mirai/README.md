@@ -14,6 +14,7 @@
 ```bash
 nmap -sV -sC -oA nmap/Mirai 10.129.95.255
 ```
+![nmap](img/nmap.png)
 
 **Ports Identified:**
 ```
@@ -32,10 +33,12 @@ nmap -sV -sC -oA nmap/Mirai 10.129.95.255
 ### Port 80 - HTTP
 
 Header reveals unusual entry:
+![burpsuite](img/burpsuite.png)
 
 ```
 X-Pi-hole: The Pi-hole Web interface is working!
 ```
+![search](img/search.png)
 
 Default dashboard:
 ```
@@ -49,6 +52,7 @@ Identified service: **Pi-hole**
 ## 🔐 Credential Discovery
 
 ### Raspberry Pi Default Credentials
+![default_credential](img/default_credential.png)
 
 - **Username**: `pi`
 - **Password**: `raspberry`
@@ -59,6 +63,7 @@ Identified service: **Pi-hole**
 ssh pi@10.129.95.255
 # Password: raspberry
 ```
+![ssh](img/ssh.png)
 
 ---
 
@@ -67,6 +72,8 @@ ssh pi@10.129.95.255
 ```bash
 cat /home/pi/Desktop/user.txt
 ```
+![userflag](img/userflag.png)
+
 **Flag:** `ff837707441b257a20e32199d7c8838d`
 
 ---
@@ -78,6 +85,7 @@ cat /home/pi/Desktop/user.txt
 ```bash
 sudo su
 ```
+![root](img/root.png)
 
 ### Root Flag
 
@@ -85,6 +93,7 @@ sudo su
 cat /root/root.txt
 # I lost my original root.txt! I think I may have a backup on my USB stick...
 ```
+![roottxt](img/roottxt.png)
 
 Inspect mounted devices:
 
@@ -92,6 +101,7 @@ Inspect mounted devices:
 lsblk
 # sdb is mounted at /media/usbstick
 ```
+![lsblk](img/lsblk.png)
 
 ```bash
 cat /media/usbstick/damnit.txt
@@ -104,6 +114,7 @@ sudo strings /dev/sdb | grep -i root.txt
 ```
 
 Recovered root flag:
+![rootflag](img/rootflag.png)
 
 **Flag:** `3d3e483143ff12ec505d026fa13e020b`
 
