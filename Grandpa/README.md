@@ -16,12 +16,16 @@ nmap -sV -sC -oA nmap/Grandpa 10.129.95.233
 ```
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![nmap](img/nmap.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
 =======
 ![nmap](img/nmap.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+![nmap](img/nmap.png)
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 **Results:**
 ```
@@ -47,6 +51,7 @@ PORT   STATE SERVICE VERSION
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
 ![exploitdb](img/exploitdb.png)
 =======
@@ -56,6 +61,10 @@ Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
 ![exploitdb](img/exploitdb.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
+![exploitdb](img/exploitdb.png)
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ```bash
 msfconsole
@@ -66,11 +75,15 @@ run
 ```
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 ![meterpreter](img/meterpreter.png)
 
 > Meterpreter session opened.
 
 ![lowprivi](img/lowprivi.png)
+<<<<<<< HEAD
 =======
 
 > Meterpreter session opened.
@@ -84,6 +97,8 @@ run
 
 ![lowprivi](img/lowprivi.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ### 📍 Migrate Session (Stabilize)
 
@@ -94,12 +109,16 @@ getuid
 ```
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![migrate](img/migrate.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
 =======
 ![migrate](img/migrate.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+![migrate](img/migrate.png)
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 **Result**:
 ```
@@ -119,12 +138,16 @@ run
 ```
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![recon](img/recon.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
 =======
 ![recon](img/recon.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+![recon](img/recon.png)
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 **Vulnerable Suggestions:**
 - ms14_058_track_popup_menu
@@ -144,12 +167,16 @@ run
 ```
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![root](img/root.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
 =======
 ![root](img/root.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+![root](img/root.png)
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ```bash
 getuid
@@ -169,6 +196,7 @@ cat C:\Users\[USERNAME]\Desktop\user.txt
 ```
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![userflag](img/userflag.png)
 =======
 
@@ -180,6 +208,9 @@ bdff5ec67c3cff017f2bedc146a5d869
 =======
 ![userflag](img/userflag.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+![userflag](img/userflag.png)
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ---
 
@@ -188,6 +219,7 @@ bdff5ec67c3cff017f2bedc146a5d869
 ```bash
 cat C:\Users\Administrator\Desktop\root.txt
 ```
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 ![rootflag](img/rootflag.png)
@@ -201,5 +233,8 @@ cat C:\Users\Administrator\Desktop\root.txt
 =======
 ![rootflag](img/rootflag.png)
 >>>>>>> bbca5bf (Update README.md)
+=======
+![rootflag](img/rootflag.png)
+>>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ---

