@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Sat Aug  2 09:22:54 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Granny 10.129.95.234
+Host: 10.129.95.234 ()	Status: Up
+Host: 10.129.95.234 ()	Ports: 80/open/tcp//http//Microsoft IIS httpd 6.0/	Ignored State: filtered (999)
+# Nmap done at Sat Aug  2 09:23:21 2025 -- 1 IP address (1 host up) scanned in 26.71 seconds
