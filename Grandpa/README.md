@@ -17,7 +17,7 @@ nmap -sV -sC -oA nmap/Grandpa 10.129.95.233
 
 ![nmap](img/nmap.png)
 =======
->>>>>>> 9f1f476 (Add files via upload)
+9f1f476 (Add files via upload)
 =======
 ![nmap](img/nmap.png)
 >>>>>>> bbca5bf (Update README.md)
