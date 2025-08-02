@@ -20,10 +20,10 @@ nmap -sV -sC -oA nmap/Grandpa 10.129.95.233
 9f1f476 (Add files via upload)
 =======
 ![nmap](img/nmap.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
 ![nmap](img/nmap.png)
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 **Results:**
 ```
@@ -52,15 +52,15 @@ Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)
 ![exploitdb](img/exploitdb.png)
 =======
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)
->>>>>>> 9f1f476 (Add files via upload)
+9f1f476 (Add files via upload)
 =======
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
 ![exploitdb](img/exploitdb.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
 ![exploitdb](img/exploitdb.png)
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ```bash
 msfconsole
@@ -71,7 +71,7 @@ run
 ```
 
 =======
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 ![meterpreter](img/meterpreter.png)
 
 > Meterpreter session opened.
@@ -83,16 +83,16 @@ run
 > Meterpreter session opened.
 
 ---
->>>>>>> 9f1f476 (Add files via upload)
+9f1f476 (Add files via upload)
 =======
 ![meterpreter](img/meterpreter.png)
 
 > Meterpreter session opened.
 
 ![lowprivi](img/lowprivi.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ### 📍 Migrate Session (Stabilize)
 
@@ -104,13 +104,13 @@ getuid
 
 ![migrate](img/migrate.png)
 =======
->>>>>>> 9f1f476 (Add files via upload)
+9f1f476 (Add files via upload)
 =======
 ![migrate](img/migrate.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
 ![migrate](img/migrate.png)
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 **Result**:
 ```
@@ -131,13 +131,13 @@ run
 
 ![recon](img/recon.png)
 =======
->>>>>>> 9f1f476 (Add files via upload)
+9f1f476 (Add files via upload)
 =======
 ![recon](img/recon.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
 ![recon](img/recon.png)
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 **Vulnerable Suggestions:**
 - ms14_058_track_popup_menu
@@ -158,13 +158,13 @@ run
 
 ![root](img/root.png)
 =======
->>>>>>> 9f1f476 (Add files via upload)
+9f1f476 (Add files via upload)
 =======
 ![root](img/root.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
 ![root](img/root.png)
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ```bash
 getuid
@@ -193,10 +193,10 @@ bdff5ec67c3cff017f2bedc146a5d869
 >>>>>>> 9f1f476 (Add files via upload)
 =======
 ![userflag](img/userflag.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
 ![userflag](img/userflag.png)
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ---
 
@@ -213,12 +213,12 @@ cat C:\Users\Administrator\Desktop\root.txt
 ```
 9359e905a2c35f861f6a57cecf28bb7b
 ```
->>>>>>> 9f1f476 (Add files via upload)
+9f1f476 (Add files via upload)
 =======
 ![rootflag](img/rootflag.png)
->>>>>>> bbca5bf (Update README.md)
+bbca5bf (Update README.md)
 =======
 ![rootflag](img/rootflag.png)
->>>>>>> 96296fda4278cf5a222c6622ada25d5f3c20dabf
+96296fda4278cf5a222c6622ada25d5f3c20dabf
 
 ---
