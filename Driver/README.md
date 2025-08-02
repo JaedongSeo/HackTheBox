@@ -58,7 +58,7 @@ hashcat -m 5600 -a 0 tony.txt /usr/share/wordlists/rockyou.txt
 
 ## Submit User Flag  
 **Answer**: `26b5081e35e8fd5708c582e8eff43525`  
-![usertxt](img/usertxt.png)  
+![usertxt](img/userttxt.png)  
 
 > Logged in via:
 ```bash
