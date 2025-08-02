@@ -47,9 +47,7 @@ PORT   STATE SERVICE VERSION
 
 ### 🔓 Exploit IIS 6.0 WebDav (CVE-2017-7269)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 Exploit: [EDB 41992](https://www.exploit-db.com/exploits/41992)  
 ![exploitdb](img/exploitdb.png)
 =======
