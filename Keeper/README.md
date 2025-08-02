@@ -4,7 +4,7 @@
 **Target IP**: 10.129.229.41  
 **Difficulty**: Easy  
 **Objective**: Gain access by exploiting KeePass vulnerability and privilege escalation.  
-![ssh](img/ssh.png)
+
 
 ---
 
@@ -67,7 +67,7 @@ SSH as lnorgaard:
 ssh lnorgaard@10.129.229.41
 Password: Welcome2023!
 ```
-![ssh](img/ssh_login.png)
+![ssh](img/ssh.png)
 
 ```bash
 cat user.txt
