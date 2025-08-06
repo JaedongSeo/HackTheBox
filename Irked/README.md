@@ -195,3 +195,6 @@ root@irked:/tmp# cat /root/root.txt
 
 ```
 
+# 취약점
+1. 취약한 버전의 IRC
+2. 잘못된 SETUID 설정
