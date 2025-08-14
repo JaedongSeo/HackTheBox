@@ -1,0 +1,4 @@
+# Nmap 7.95 scan initiated Thu Aug 14 09:47:58 2025 as: /usr/lib/nmap/nmap -sV -sC -oA nmap/Access -p 21,23,80 10.129.52.215
+Host: 10.129.52.215 ()	Status: Up
+Host: 10.129.52.215 ()	Ports: 21/open/tcp//ftp//Microsoft ftpd/, 23/open/tcp//telnet?///, 80/open/tcp//http//Microsoft IIS httpd 7.5/
+# Nmap done at Thu Aug 14 09:51:02 2025 -- 1 IP address (1 host up) scanned in 184.50 seconds
